@@ -1,0 +1,3 @@
+[submodule "libs/mmpengine"]
+	path = libs/mmpengine
+	url = git@bitbucket.org:maxpushkarev/mmpengine.git
