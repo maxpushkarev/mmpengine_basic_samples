@@ -8,11 +8,13 @@ function(addSample appName)
 	add_executable(${appName}
 		src/samples/${appName}/Main.cpp
 	)
+	
+	mmpengine_add_source_files_to_proj(${appName} src/samples/${appName})
 
 	get_property(core_name_tmp GLOBAL PROPERTY MMPENGINE_CORE_NAME)
 	get_property(frontend_name_tmp GLOBAL PROPERTY MMPENGINE_FRONTEND_NAME)
 
-	target_include_directories(${appName} PRIVATE ${PROJECT_SOURCE_DIR}/libs/mmpengine/src)
+	target_include_directories(${appName} PRIVATE ${PROJECT_SOURCE_DIR}/libs/mmpengine/src ${PROJECT_SOURCE_DIR}/src/samples)
 	target_link_libraries(${appName} PRIVATE ${core_name_tmp} ${frontend_name_tmp})
 	target_compile_features(${appName}  PRIVATE cxx_std_17)
 	SET(RuntimeOutputDir ${CMAKE_SOURCE_DIR}/bin/${appName})

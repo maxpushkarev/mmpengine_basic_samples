@@ -1,7 +1,8 @@
 #include <cstdint>
 #include <Core/Context.hpp>
-
-#include "Frontend/App.hpp"
+#include <Frontend/Context.hpp>
+#include <Frontend/App.hpp>
+#include <Cube/App.hpp>
 #ifdef MMPENGINE_WIN
 #include <Windows.h>
 #endif
@@ -19,7 +20,9 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 
 	appContextSettings.backend = MMPEngine::Core::BackendType::Dx12;
 
-	//const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, )
+	const auto appContext = MMPEngine::Frontend::AppContext::BuildAppContext(appContextSettings);
+	const auto userApp = std::make_shared<Cube::App>(appContext);
+	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(userApp);
 
 	return 0;
 }
