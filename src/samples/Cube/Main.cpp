@@ -21,7 +21,7 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 	appContextSettings.backend = MMPEngine::Core::BackendType::Dx12;
 
 	const auto appContext = MMPEngine::Frontend::AppContext::BuildAppContext(appContextSettings);
-	const auto userApp = std::make_shared<Cube::App>(appContext);
+	const auto userApp = std::make_shared<Cube::App>();
 	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(userApp);
 
 	return 0;
