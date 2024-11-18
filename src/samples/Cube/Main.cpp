@@ -1,5 +1,7 @@
 #include <cstdint>
 #include <Core/Context.hpp>
+
+#include "Frontend/App.hpp"
 #ifdef MMPENGINE_WIN
 #include <Windows.h>
 #endif
@@ -16,6 +18,8 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 #endif
 
 	appContextSettings.backend = MMPEngine::Core::BackendType::Dx12;
+
+	//const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, )
 
 	return 0;
 }
