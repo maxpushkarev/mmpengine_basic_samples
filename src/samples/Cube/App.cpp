@@ -1,6 +1,6 @@
 #include <Cube/App.hpp>
 
-namespace Cube
+namespace Sample::Cube
 {
 	App::App() = default;
 }

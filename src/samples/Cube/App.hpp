@@ -1,7 +1,7 @@
 #pragma once
 #include <Core/App.hpp>
 
-namespace Cube
+namespace Sample::Cube
 {
 	class App : public MMPEngine::Core::UserApp
 	{
