@@ -31,6 +31,6 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 
 	const auto appContainer = std::make_unique<MMPEngine::Frontend::Win::AppContainer>(std::move(appContainerSettings), rootApp);
 
-	return 0;
+	return appContainer->Run();
 }
 #endif
