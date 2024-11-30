@@ -34,3 +34,4 @@ function(addSample appName)
 endfunction()
 
 addSample("Cube")
+addSample("Buffers")
