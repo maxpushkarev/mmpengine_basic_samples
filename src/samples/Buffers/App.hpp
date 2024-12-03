@@ -10,13 +10,14 @@ namespace Sample::Buffers
 		void Initialize() override;
 	private:
 
-		struct ConstantBufferStruct final
+		struct TestStruct final
 		{
 			MMPEngine::Core::Vector4Uint v1;
 			MMPEngine::Core::Vector4Uint v2;
 		};
 
-		void Test_Upload_To_ReadBack();
+		void Test_Upload_To_Resident_To_ReadBack();
+		void Test_Structured_Buffers();
 		void TestConstantBufferTo_ReadBack();
 		static constexpr std::size_t _vecSize = 128;
 	};
