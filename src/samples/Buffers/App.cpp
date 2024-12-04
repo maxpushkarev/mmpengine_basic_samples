@@ -10,8 +10,10 @@ namespace Sample::Buffers
 		UserApp::Initialize();
 
 		Test_Upload_To_Resident_To_ReadBack();
-		TestConstantBufferTo_ReadBack();
+		Test_ConstantBufferTo_ReadBack();
 		Test_Structured_Buffers();
+		Test_IndexBuffer();
+		Test_VertexBuffer();
 	}
 
 	void App::Test_Upload_To_Resident_To_ReadBack()
@@ -70,6 +72,99 @@ namespace Sample::Buffers
 		readBack->Read(readBackVec.data(), byteLength, 0);
 
 		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
+	}
+
+	void App::Test_IndexBuffer()
+	{
+		const auto stream = GetDefaultStream();
+
+		std::vector<std::int16_t> indexVec(_vecSize, 0);
+		for (std::size_t i = 0; i < indexVec.size(); ++i)
+		{
+			indexVec[i] = static_cast<std::int16_t>(i);
+		}
+
+		const auto indexBuffer = std::make_shared<MMPEngine::Frontend::IndexBuffer>(
+			GetContext(),
+			MMPEngine::Core::InputAssemblerBuffer::Settings{
+				{
+					indexVec.data()
+				},
+				{
+					_vecSize * sizeof(decltype(indexVec)::value_type),
+					"test_index_buffer"
+				}
+			}
+		);
+
+		const auto readBack = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(
+			GetContext(),
+			MMPEngine::Core::Buffer::Settings{
+			indexBuffer->GetSettings().byteLength,
+				"test_read_back_buffer"
+		}
+		);
+
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(indexBuffer->CreateInitializationTask());
+			stream->Schedule(readBack->CreateInitializationTask());
+			stream->Schedule(indexBuffer->CopyToBuffer(readBack));
+		}
+
+		std::vector<std::int16_t> readBackVec(_vecSize, 0);
+		readBack->Read(readBackVec.data(), readBack->GetSettings().byteLength, 0);
+
+		assert(std::equal(indexVec.cbegin(), indexVec.cend(), readBackVec.cbegin()));
+	}
+
+
+	void App::Test_VertexBuffer()
+	{
+		const auto stream = GetDefaultStream();
+
+		std::vector<MMPEngine::Core::Vector3Uint> vertexVec(_vecSize, MMPEngine::Core::Vector3Uint{});
+		for (std::size_t i = 0; i < vertexVec.size(); ++i)
+		{
+			vertexVec[i] = MMPEngine::Core::Vector3Uint {
+				static_cast<std::uint32_t>(i),
+				static_cast<std::uint32_t>(i),
+				static_cast<std::uint32_t>(i)
+			};
+		}
+
+		const auto vertexBuffer = std::make_shared<MMPEngine::Frontend::VertexBuffer>(
+			GetContext(),
+			MMPEngine::Core::InputAssemblerBuffer::Settings{
+				{
+					vertexVec.data()
+				},
+				{
+					_vecSize * sizeof(decltype(vertexVec)::value_type),
+					"test_vertex_buffer"
+				}
+		}
+		);
+
+		const auto readBack = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(
+			GetContext(),
+			MMPEngine::Core::Buffer::Settings{
+			vertexBuffer->GetSettings().byteLength,
+				"test_read_back_buffer"
+		}
+		);
+
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(vertexBuffer->CreateInitializationTask());
+			stream->Schedule(readBack->CreateInitializationTask());
+			stream->Schedule(vertexBuffer->CopyToBuffer(readBack));
+		}
+
+		std::vector<MMPEngine::Core::Vector3Uint> readBackVec(_vecSize, MMPEngine::Core::Vector3Uint{});
+		readBack->Read(readBackVec.data(), readBack->GetSettings().byteLength, 0);
+
+		assert(std::equal(vertexVec.cbegin(), vertexVec.cend(), readBackVec.cbegin()));
 	}
 
     void App::Test_Structured_Buffers()
@@ -136,7 +231,7 @@ namespace Sample::Buffers
 		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
     }
 
-	void App::TestConstantBufferTo_ReadBack()
+	void App::Test_ConstantBufferTo_ReadBack()
 	{
 		const auto stream = GetDefaultStream();
 
