@@ -41,6 +41,7 @@ function(addSample appName)
 
 	#shdders
 	file (GLOB shaderConfigurationFiles src/samples/${appName}/shaders/*.json)
+	
 	foreach( shader_cfg ${shaderConfigurationFiles})
 		target_sources(${appName} PRIVATE ${shader_cfg})
 		
@@ -51,6 +52,33 @@ function(addSample appName)
 		endif()
 		
 	endforeach( shader_cfg ${shaderConfigurationFiles} )
+	
+	#hlsl shaders
+	list(APPEND hlsl_shader_types Vertex Pixel Geometry Hull Domain Compute Amplification Mesh Library)
+	file (GLOB hlslShaders src/samples/${appName}/shaders/*.hlsl)
+	foreach( hlsl_shader ${hlslShaders})
+	
+		target_sources(${appName} PRIVATE ${hlsl_shader})
+		
+		get_filename_component(shaderNameWE ${hlsl_shader} NAME_WE)
+		
+		SET(shaderType "unknown")
+		
+		foreach(Type IN LISTS hlsl_shader_types)
+			if(${shaderNameWE} MATCHES "^${Type}_")
+				SET(shaderType ${Type})
+			endif()
+		endforeach()
+		
+		if (CMAKE_GENERATOR MATCHES "Visual Studio")
+			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_ENTRYPOINT "EntryPoint")
+			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_TYPE ${shaderType})
+			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_MODEL "6.5")
+		else()
+			#TODO: support
+		endif()
+
+	endforeach( hlsl_shader ${hlslShaders} )
 	
 endfunction()
 
