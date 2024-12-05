@@ -19,19 +19,38 @@ function(addSample appName)
 	target_compile_features(${appName}  PRIVATE cxx_std_17)
 	SET(RuntimeOutputDir ${CMAKE_SOURCE_DIR}/bin/${appName})
 	set_property(TARGET ${appName} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${RuntimeOutputDir})
-	
+
 	IF (WIN32)
 		get_property(win_macro_tmp GLOBAL PROPERTY MMPENGINE_WIN_MACRO)
 		get_property(dx12_macro_tmp GLOBAL PROPERTY MMPENGINE_DX12_MACRO)
 		target_compile_definitions(${appName} PRIVATE ${win_macro_tmp}=1)
 		target_compile_definitions(${appName} PRIVATE ${dx12_macro_tmp}=1)
 		set_target_properties(${appName} PROPERTIES WIN32_EXECUTABLE TRUE)
-		SET(VSWorkingDir ${RuntimeOutputDir}/${CMAKE_CFG_INTDIR})
-		set_property(TARGET ${appName} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${VSWorkingDir})
+		
+		if (CMAKE_GENERATOR MATCHES "Visual Studio")
+			SET(VSWorkingDir ${RuntimeOutputDir}/${CMAKE_CFG_INTDIR})
+			set_property(TARGET ${appName} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${VSWorkingDir})
+		else()
+			#TODO: support
+		endif()
+		
 	elseif(APPLE)
 		get_property(macosx_macro_tmp GLOBAL PROPERTY MMPENGINE_MACOSX_MACRO)
 		target_compile_definitions(${appName} PRIVATE ${macosx_macro_tmp}=1)
 	ENDIF()
+
+	#shdders
+	file (GLOB shaderConfigurationFiles src/samples/${appName}/shaders/*.json)
+	foreach( shader_cfg ${shaderConfigurationFiles})
+		target_sources(${appName} PRIVATE ${shader_cfg})
+		
+		if (CMAKE_GENERATOR MATCHES "Visual Studio")
+			set_source_files_properties( ${shader_cfg} PROPERTIES VS_COPY_TO_OUT_DIR "Always")
+		else()
+			#TODO: support
+		endif()
+		
+	endforeach( shader_cfg ${shaderConfigurationFiles} )
 	
 endfunction()
 

@@ -1,0 +1,9 @@
+{
+  "shaderConfig": {
+    "Dx12": {
+      "path": "MMPENGINE_SAMPLE_HLSL_COMPUTE_SHADER_ThreadId.cso"
+    },
+    "Vulkan": {},
+    "Metal": {}
+  }
+}
