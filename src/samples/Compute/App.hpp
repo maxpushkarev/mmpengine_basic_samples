@@ -7,5 +7,8 @@ namespace Sample::Compute
 	{
 	public:
 		App();
+		void Initialize() override;
+	private:
+		void Test_SetThreadId();
 	};
 }
