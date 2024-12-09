@@ -64,7 +64,6 @@ namespace Sample::Buffers
 			stream->Schedule(uploadBuffer->CreateWriteTask(uploadVec.data(), byteLength));
 			stream->Schedule(uploadBuffer->CopyToBuffer(resident));
 			stream->Schedule(resident->CopyToBuffer(readBack));
-			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), byteLength, 0));
 		}
 
@@ -110,7 +109,6 @@ namespace Sample::Buffers
 			stream->Schedule(indexBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(indexBuffer->CopyToBuffer(readBack));
-			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), readBack->GetSettings().byteLength, 0));
 		}
 
@@ -160,7 +158,6 @@ namespace Sample::Buffers
 			stream->Schedule(vertexBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(vertexBuffer->CopyToBuffer(readBack));
-			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), readBack->GetSettings().byteLength, 0));
 		}
 
@@ -217,7 +214,6 @@ namespace Sample::Buffers
 
 			stream->Schedule(uploadBuffer->CopyToBuffer(resident));
 			stream->Schedule(resident->CopyToBuffer(readBack));
-			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 
 			for (std::size_t i = 0; i < uploadVec.size(); ++i)
 			{
@@ -254,7 +250,6 @@ namespace Sample::Buffers
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
 			stream->Schedule(constantBuffer->CreateWriteAsyncTask(expected));
 			stream->Schedule(constantBuffer->CopyToBuffer(readBackBuffer));
-			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 			stream->Schedule(readBackBuffer->CreateReadTask(&actual, sizeof(actual), 0));
 		}
 
