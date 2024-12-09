@@ -2,6 +2,7 @@
 #include <Compute/App.hpp>
 #include <Frontend/Shader.hpp>
 #include <Frontend/Material.hpp>
+#include <Frontend/Compute.hpp>
 
 namespace Sample::Compute
 {
@@ -18,6 +19,7 @@ namespace Sample::Compute
 	{
 		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetThreadId.json"));
 		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), computeShader);
+		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
 		const auto stream = GetDefaultStream();
 
@@ -28,6 +30,7 @@ namespace Sample::Compute
 
 			MMPEngine::Core::BaseMaterial::Parameters params { std::vector<MMPEngine::Core::BaseMaterial::Parameters::Entry> {} };
 			stream->Schedule(material->CreateTaskForUpdateParameters(std::move(params)));
+			stream->Schedule(computeJob->CreateInitializationTask());
 		}
 	}
 
