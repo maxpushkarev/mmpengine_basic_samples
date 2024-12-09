@@ -32,6 +32,12 @@ namespace Sample::Compute
 			stream->Schedule(material->CreateTaskForUpdateParameters(std::move(params)));
 			stream->Schedule(computeJob->CreateInitializationTask());
 		}
+
+		/*const auto computeExecutionTask = computeJob->CreateExecutionTask();
+
+		{
+			const auto executor = stream->CreateExecutor();
+		}*/
 	}
 
 
