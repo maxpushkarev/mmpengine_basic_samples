@@ -22,6 +22,8 @@ namespace Sample::Buffers
 
 
 		std::vector<std::size_t> uploadVec(_vecSize, 0);
+		std::vector<std::size_t> readBackVec(_vecSize, 0);
+
 		for (std::size_t i = 0; i < uploadVec.size(); ++i)
 		{
 			uploadVec[i] = i;
@@ -58,18 +60,14 @@ namespace Sample::Buffers
 			stream->Schedule(uploadBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(resident->CreateInitializationTask());
-		}
 
-		uploadBuffer->Write(uploadVec.data(), byteLength);
-
-		{
-			const auto executor = stream->CreateExecutor();
+			stream->Schedule(uploadBuffer->CreateWriteTask(uploadVec.data(), byteLength));
 			stream->Schedule(uploadBuffer->CopyToBuffer(resident));
 			stream->Schedule(resident->CopyToBuffer(readBack));
+			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
+			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), byteLength, 0));
 		}
 
-		std::vector<std::size_t> readBackVec(_vecSize, 0);
-		readBack->Read(readBackVec.data(), byteLength, 0);
 
 		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
 	}
@@ -79,6 +77,8 @@ namespace Sample::Buffers
 		const auto stream = GetDefaultStream();
 
 		std::vector<std::int16_t> indexVec(_vecSize, 0);
+		std::vector<std::int16_t> readBackVec(_vecSize, 0);
+
 		for (std::size_t i = 0; i < indexVec.size(); ++i)
 		{
 			indexVec[i] = static_cast<std::int16_t>(i);
@@ -110,10 +110,9 @@ namespace Sample::Buffers
 			stream->Schedule(indexBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(indexBuffer->CopyToBuffer(readBack));
+			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
+			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), readBack->GetSettings().byteLength, 0));
 		}
-
-		std::vector<std::int16_t> readBackVec(_vecSize, 0);
-		readBack->Read(readBackVec.data(), readBack->GetSettings().byteLength, 0);
 
 		assert(std::equal(indexVec.cbegin(), indexVec.cend(), readBackVec.cbegin()));
 	}
@@ -124,6 +123,8 @@ namespace Sample::Buffers
 		const auto stream = GetDefaultStream();
 
 		std::vector<MMPEngine::Core::Vector3Uint> vertexVec(_vecSize, MMPEngine::Core::Vector3Uint{});
+		std::vector<MMPEngine::Core::Vector3Uint> readBackVec(_vecSize, MMPEngine::Core::Vector3Uint{});
+
 		for (std::size_t i = 0; i < vertexVec.size(); ++i)
 		{
 			vertexVec[i] = MMPEngine::Core::Vector3Uint {
@@ -159,10 +160,9 @@ namespace Sample::Buffers
 			stream->Schedule(vertexBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(vertexBuffer->CopyToBuffer(readBack));
+			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
+			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), readBack->GetSettings().byteLength, 0));
 		}
-
-		std::vector<MMPEngine::Core::Vector3Uint> readBackVec(_vecSize, MMPEngine::Core::Vector3Uint{});
-		readBack->Read(readBackVec.data(), readBack->GetSettings().byteLength, 0);
 
 		assert(std::equal(vertexVec.cbegin(), vertexVec.cend(), readBackVec.cbegin()));
 	}
@@ -171,8 +171,9 @@ namespace Sample::Buffers
     {
 		const auto stream = GetDefaultStream();
 
-
 		std::vector<MMPEngine::Core::Vector2Uint> uploadVec(_vecSize, MMPEngine::Core::Vector2Uint{});
+		std::vector<MMPEngine::Core::Vector2Uint> readBackVec(_vecSize, MMPEngine::Core::Vector2Uint{});
+
 
 		for (std::size_t i = 0; i < uploadVec.size(); ++i)
 		{
@@ -208,24 +209,20 @@ namespace Sample::Buffers
 			stream->Schedule(uploadBuffer->CreateInitializationTask());
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(resident->CreateInitializationTask());
-		}
 
-		for(std::size_t i = 0; i < uploadVec.size(); ++i)
-		{
-			uploadBuffer->WriteStruct(uploadVec[i], i);
-		}
+			for (std::size_t i = 0; i < uploadVec.size(); ++i)
+			{
+				stream->Schedule(uploadBuffer->CreateWriteStructTask(uploadVec[i], i));
+			}
 
-		{
-			const auto executor = stream->CreateExecutor();
 			stream->Schedule(uploadBuffer->CopyToBuffer(resident));
 			stream->Schedule(resident->CopyToBuffer(readBack));
-		}
+			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
 
-		std::vector<MMPEngine::Core::Vector2Uint> readBackVec(_vecSize, MMPEngine::Core::Vector2Uint{});
-
-		for (std::size_t i = 0; i < uploadVec.size(); ++i)
-		{
-			readBack->ReadStruct(readBackVec[i], i);
+			for (std::size_t i = 0; i < uploadVec.size(); ++i)
+			{
+				stream->Schedule(readBack->CreateReadStructTask(readBackVec[i], i));
+			}
 		}
 
 		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
@@ -244,29 +241,24 @@ namespace Sample::Buffers
 		}
 		);
 
+		constexpr TestStruct expected {
+	{1,2,3,4},
+	{5,6,7,8}
+		};
+
+		TestStruct actual{};
+
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(constantBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
-		}
-
-		const TestStruct expected {
-			{1,2,3,4},
-			{5,6,7,8}
-		};
-
-		constantBuffer->Write(expected);
-
-		{
-			const auto executor = stream->CreateExecutor();
+			stream->Schedule(constantBuffer->CreateWriteAsyncTask(expected));
 			stream->Schedule(constantBuffer->CopyToBuffer(readBackBuffer));
+			stream->Schedule(MMPEngine::Core::StreamBarrierTask::kInstance);
+			stream->Schedule(readBackBuffer->CreateReadTask(&actual, sizeof(actual), 0));
 		}
 
-		TestStruct actual {};
-		readBackBuffer->Read(&actual, sizeof(actual), 0);
-
-		assert(expected.v1 == actual.v1);
-		assert(expected.v2 == actual.v2);
+		assert(std::memcmp(&expected, &actual, sizeof(expected)) == 0);
 	}
 
 }
