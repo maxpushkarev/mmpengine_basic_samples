@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 project(mmpengine_basic_samples VERSION 1.0.0 LANGUAGES C CXX)
 
+IF (WIN32)
+	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+endif()
+
+
 add_subdirectory(libs/mmpengine)
 
 function(addSample appName)

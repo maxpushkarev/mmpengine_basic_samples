@@ -9,6 +9,7 @@ namespace Sample::Compute
 		App();
 		void Initialize() override;
 	private:
+		static constexpr std::size_t _vecSize = 128;
 		void Test_SetThreadId();
 	};
 }
