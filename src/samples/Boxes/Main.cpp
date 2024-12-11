@@ -1,10 +1,10 @@
 #include <MainTemplate.hpp>
-#include <Cube/App.hpp>
+#include <Boxes/App.hpp>
 
 #ifdef MMPENGINE_WIN
 std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 	PSTR, std::int32_t)
 {
-	return MainTemplate::WinMain<Sample::Cube::App>(hInstance, MMPEngine::Core::BackendType::Dx12, "Cube");
+	return MainTemplate::WinMain<Sample::Boxes::App>(hInstance, MMPEngine::Core::BackendType::Dx12, "Boxes");
 }
 #endif

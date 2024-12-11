@@ -89,6 +89,6 @@ function(addSample appName)
 endfunction()
 
 addSample("Empty")
-addSample("Cube")
+addSample("Boxes")
 addSample("Buffers")
 addSample("Compute")
