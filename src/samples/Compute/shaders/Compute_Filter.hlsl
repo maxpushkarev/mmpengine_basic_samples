@@ -8,7 +8,7 @@ RWStructuredBuffer<int> output: register(u0);
 void EntryPoint(uint3 tId : SV_DispatchThreadId)
 {
 	/*const int inputValue = input[tId.x];
-	if (inputValue >= 0)
+	if (inputValue > 0)
 	{
 		output.Append(inputValue);
 	}*/

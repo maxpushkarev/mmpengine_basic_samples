@@ -110,7 +110,7 @@ namespace Sample::Compute
 
 		std::copy_if(inputVec.cbegin(), inputVec.cend(),
 			std::back_inserter(filtered),
-			[](const auto v) { return v >= 0; }
+			[](const auto v) { return v > 0; }
 		);
 
 		std::vector<std::int32_t> outputVec(_vecSize, 0);
@@ -186,6 +186,7 @@ namespace Sample::Compute
 			stream->Schedule(readBackBuffer->CreateReadTask(outputVec.data(), byteLength, 0));
 		}
 
+		std::sort(outputVec.begin(), outputVec.end());
 		assert(std::equal(inputVec.cbegin(), inputVec.cend(), outputVec.cbegin()));
 
 	}
