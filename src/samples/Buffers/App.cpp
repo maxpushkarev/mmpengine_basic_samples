@@ -1,5 +1,6 @@
 #include <Buffers/App.hpp>
 #include <Frontend/Buffer.hpp>
+#include <cassert>
 
 namespace Sample::Buffers
 {

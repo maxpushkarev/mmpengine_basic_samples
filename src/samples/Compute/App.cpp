@@ -80,7 +80,7 @@ namespace Sample::Compute
 			const auto executor = stream->CreateExecutor();
 
 			const auto computeExecutionTask = computeJob->CreateExecutionTask();
-			computeExecutionTask->GetContext()->dimensions = {_vecSize, 1, 1};
+			computeExecutionTask->GetTaskContext()->dimensions = {_vecSize, 1, 1};
 
 			stream->Schedule(computeExecutionTask);
 			stream->Schedule(uaBuffer->CopyToBuffer(readBackBuffer));
