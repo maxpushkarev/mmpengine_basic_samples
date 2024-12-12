@@ -186,7 +186,7 @@ namespace Sample::Compute
 			stream->Schedule(readBackBuffer->CreateReadTask(outputVec.data(), byteLength, 0));
 		}
 
-		std::sort(outputVec.begin(), outputVec.end());
+		//std::sort(outputVec.begin(), outputVec.end());
 		assert(std::equal(inputVec.cbegin(), inputVec.cend(), outputVec.cbegin()));
 
 	}
