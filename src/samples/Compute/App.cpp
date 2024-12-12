@@ -81,7 +81,7 @@ namespace Sample::Compute
 			const auto executor = stream->CreateExecutor();
 
 			const auto computeExecutionTask = computeJob->CreateExecutionTask();
-			computeExecutionTask->GetTaskContext()->dimensions = {_vecSize, 1, 1};
+			computeExecutionTask->GetTaskContext()->dimensions = {1, 1, 1};
 
 			stream->Schedule(computeExecutionTask);
 			stream->Schedule(uaBuffer->CopyToBuffer(readBackBuffer));
@@ -102,6 +102,7 @@ namespace Sample::Compute
 
 		std::vector<std::int32_t> inputVec(_vecSize, 0);
 		std::vector<std::int32_t> filtered {};
+		MMPEngine::Core::CounteredUnorderedAccessBuffer::CounterValueType counterValue = 123;
 
 		for (std::int32_t i = 0; i < static_cast<std::int32_t>(inputVec.size()); ++i)
 		{
@@ -124,7 +125,7 @@ namespace Sample::Compute
 		}
 		);
 
-		const auto uaBuffer = std::make_shared<MMPEngine::Frontend::UnorderedAccessBuffer>(
+		const auto uaBuffer = std::make_shared<MMPEngine::Frontend::CounteredUnorderedAccessBuffer>(
 			appContext,
 			MMPEngine::Core::BaseUnorderedAccessBuffer::Settings{
 			sizeof(decltype(inputVec)::value_type),
@@ -141,6 +142,12 @@ namespace Sample::Compute
 		}
 		);
 
+		const auto counterReadBack = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(appContext,
+			MMPEngine::Core::Buffer::Settings{
+			sizeof(counterValue),
+				"test_counter_read_back_buffer"
+		});
+
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -150,6 +157,7 @@ namespace Sample::Compute
 			stream->Schedule(uploadBuffer->CreateInitializationTask());
 			stream->Schedule(uaBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
+			stream->Schedule(counterReadBack->CreateInitializationTask());
 
 			MMPEngine::Core::BaseMaterial::Parameters params {
 				std::vector {
@@ -172,22 +180,36 @@ namespace Sample::Compute
 			stream->Schedule(material->CreateTaskForUpdateParameters(std::move(params)));
 			stream->Schedule(computeJob->CreateInitializationTask());
 
+			stream->Schedule(uaBuffer->CreateCopyCounterTask(counterReadBack, sizeof(counterValue), 0));
+			stream->Schedule(counterReadBack->CreateReadTask(&counterValue, sizeof(counterValue), 0));
 		}
+
+		assert(counterValue == 0);
 
 		{
 			const auto executor = stream->CreateExecutor();
 
 			const auto computeExecutionTask = computeJob->CreateExecutionTask();
-			computeExecutionTask->GetTaskContext()->dimensions = { _vecSize, 1, 1 };
+			computeExecutionTask->GetTaskContext()->dimensions = { 1, 1, 1 };
 
 			stream->Schedule(uploadBuffer->CreateWriteTask(inputVec.data(), byteLength, 0));
 			stream->Schedule(computeExecutionTask);
 			stream->Schedule(uaBuffer->CopyToBuffer(readBackBuffer));
 			stream->Schedule(readBackBuffer->CreateReadTask(outputVec.data(), byteLength, 0));
+
+			stream->Schedule(uaBuffer->CreateCopyCounterTask(counterReadBack, sizeof(counterValue), 0));
+			stream->Schedule(counterReadBack->CreateReadTask(&counterValue, sizeof(counterValue), 0));
 		}
 
-		//std::sort(outputVec.begin(), outputVec.end());
-		assert(std::equal(inputVec.cbegin(), inputVec.cend(), outputVec.cbegin()));
+
+		assert(counterValue == static_cast<decltype(counterValue)>(filtered.size()));
+
+		auto tail = outputVec.begin();
+		std::advance(tail, counterValue);
+		outputVec.erase(tail, outputVec.end());
+
+		std::sort(outputVec.begin(), outputVec.end());
+		assert(std::equal(filtered.cbegin(), filtered.cend(), outputVec.cbegin()));
 
 	}
 
