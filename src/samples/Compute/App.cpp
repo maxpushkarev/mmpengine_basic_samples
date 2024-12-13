@@ -211,6 +211,21 @@ namespace Sample::Compute
 		std::sort(outputVec.begin(), outputVec.end());
 		assert(std::equal(filtered.cbegin(), filtered.cend(), outputVec.cbegin()));
 
+		{
+			const auto executor = stream->CreateExecutor();
+
+			stream->Schedule(uaBuffer->CreateResetCounterTask());
+			stream->Schedule(uaBuffer->CopyToBuffer(readBackBuffer));
+			stream->Schedule(uaBuffer->CreateCopyCounterTask(counterReadBack, sizeof(counterValue), 0));
+			stream->Schedule(counterReadBack->CreateReadTask(&counterValue, sizeof(counterValue), 0));
+			stream->Schedule(readBackBuffer->CreateReadTask(outputVec.data(), outputVec.size() * sizeof(decltype(outputVec)::value_type), 0));
+		}
+
+
+		assert(counterValue == 0);
+
+		std::sort(outputVec.begin(), outputVec.end());
+		assert(std::equal(filtered.cbegin(), filtered.cend(), outputVec.cbegin()));
 	}
 
 }
