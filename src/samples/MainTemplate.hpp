@@ -43,8 +43,8 @@ inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::
 	appContextSettings.backend = backendType;
 
 	const auto userApp = std::make_shared<TUserApp>();
-	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, userApp);
-	rootApp->GetContext()->logger = std::make_unique<MMPEngine::Frontend::Win::OutputLogger>(userAppName + " logger");
+	auto logger = std::make_unique<MMPEngine::Frontend::Win::OutputLogger>(userAppName + " logger");
+	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, userApp, std::move(logger));
 
 	MMPEngine::Frontend::Win::AppContainer::Settings appContainerSettings {};
 	appContainerSettings.base = { userAppName };
