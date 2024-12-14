@@ -44,7 +44,9 @@ inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::
 
 	const auto userApp = std::make_shared<TUserApp>();
 	auto logger = std::make_unique<MMPEngine::Frontend::Win::OutputLogger>(userAppName + " logger");
-	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, userApp, std::move(logger));
+	auto math = std::make_unique<MMPEngine::Core::DefaultMath>();
+
+	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, userApp, std::move(math), std::move(logger));
 
 	MMPEngine::Frontend::Win::AppContainer::Settings appContainerSettings {};
 	appContainerSettings.base = { userAppName };
