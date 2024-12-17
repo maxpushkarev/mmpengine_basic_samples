@@ -25,7 +25,7 @@ public:
 template<typename TUserApp>
 inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::BackendType backendType, const std::string& userAppName, std::optional<bool> isDebug)
 {
-	MMPEngine::Core::AppContext::Settings appContextSettings {};
+	MMPEngine::Core::GlobalContext::Settings appContextSettings {};
 
 	if(isDebug.has_value())
 	{

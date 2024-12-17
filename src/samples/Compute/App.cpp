@@ -93,12 +93,12 @@ namespace Sample::Compute
 
 	void App::Test_Filter()
 	{
-		const auto appContext = GetContext();
+		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
-		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(appContext, std::filesystem::path("Compute_Filter.json"));
-		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(appContext, computeShader);
-		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(appContext, material);
+		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(globalContext, std::filesystem::path("Compute_Filter.json"));
+		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, computeShader);
+		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, material);
 
 		std::vector<std::int32_t> inputVec(_vecSize, 0);
 		std::vector<std::int32_t> filtered {};
@@ -118,7 +118,7 @@ namespace Sample::Compute
 		constexpr std::size_t byteLength = _vecSize * sizeof(decltype(outputVec)::value_type);
 
 		const auto uploadBuffer = std::make_shared<MMPEngine::Frontend::UploadBuffer>(
-			appContext,
+			globalContext,
 			MMPEngine::Core::Buffer::Settings{
 			byteLength,
 				"test_upload_buffer"
@@ -126,7 +126,7 @@ namespace Sample::Compute
 		);
 
 		const auto uaBuffer = std::make_shared<MMPEngine::Frontend::CounteredUnorderedAccessBuffer>(
-			appContext,
+			globalContext,
 			MMPEngine::Core::BaseUnorderedAccessBuffer::Settings{
 			sizeof(decltype(inputVec)::value_type),
 				_vecSize,
@@ -135,14 +135,14 @@ namespace Sample::Compute
 		);
 
 		const auto readBackBuffer = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(
-			appContext,
+			globalContext,
 			MMPEngine::Core::Buffer::Settings{
 			byteLength,
 				"test_read_back_buffer"
 		}
 		);
 
-		const auto counterReadBack = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(appContext,
+		const auto counterReadBack = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(globalContext,
 			MMPEngine::Core::Buffer::Settings{
 			sizeof(counterValue),
 				"test_counter_read_back_buffer"
