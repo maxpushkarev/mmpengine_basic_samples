@@ -4,7 +4,9 @@
 
 namespace Sample::Buffers
 {
-	App::App() = default;
+	App::App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger) : UserApp(logger)
+	{
+	}
 
 	void App::Initialize()
 	{

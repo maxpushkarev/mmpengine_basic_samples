@@ -5,9 +5,9 @@
 #endif
 
 #include <Core/Context.hpp>
-#include <Frontend/App.hpp>
-#include <Frontend/Logger.hpp>
-#include <Frontend/AppContainer.hpp>
+#include <Feature/App.hpp>
+#include <Feature/Logger.hpp>
+#include <Feature/AppContainer.hpp>
 
 class MainTemplate final
 {
@@ -42,16 +42,15 @@ inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::
 
 	appContextSettings.backend = backendType;
 
-	const auto userApp = std::make_shared<TUserApp>();
-	auto logger = std::make_unique<MMPEngine::Frontend::Win::OutputLogger>(userAppName + " logger");
-	const auto rootApp = MMPEngine::Frontend::App::BuildRootApp(appContextSettings, userApp, nullptr, std::move(logger));
+	const auto logger = std::make_shared<MMPEngine::Feature::Win::OutputLogger>(userAppName + " logger");
+	const auto userApp = std::make_shared<TUserApp>(logger);
+	const auto rootApp = MMPEngine::Feature::App::BuildRootApp(appContextSettings, userApp, nullptr, logger);
 
-	MMPEngine::Frontend::Win::AppContainer::Settings appContainerSettings {};
+	MMPEngine::Feature::Win::AppContainer::Settings appContainerSettings {};
 	appContainerSettings.base = { userAppName };
 	appContainerSettings.platform = { hInstance };
 
-	const auto appContainer = std::make_unique<MMPEngine::Frontend::Win::AppContainer>(std::move(appContainerSettings), rootApp);
-
+	const auto appContainer = std::make_unique<MMPEngine::Feature::Win::AppContainer>(std::move(appContainerSettings), rootApp);
 	return appContainer->Run();
 }
 

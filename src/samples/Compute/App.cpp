@@ -1,4 +1,3 @@
-#include <Frontend/App.hpp>
 #include <Compute/App.hpp>
 #include <Frontend/Shader.hpp>
 #include <Frontend/Material.hpp>
@@ -7,7 +6,9 @@
 
 namespace Sample::Compute
 {
-	App::App() = default;
+	App::App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger) : UserApp(logger)
+	{
+	}
 
 	void App::Initialize()
 	{

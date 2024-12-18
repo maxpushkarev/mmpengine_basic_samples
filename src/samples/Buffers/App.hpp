@@ -1,12 +1,12 @@
 #pragma once
-#include <Core/App.hpp>
+#include <Feature/App.hpp>
 
 namespace Sample::Buffers
 {
-	class App : public MMPEngine::Core::UserApp
+	class App : public MMPEngine::Feature::UserApp
 	{
 	public:
-		App();
+		App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger);
 		void Initialize() override;
 	private:
 

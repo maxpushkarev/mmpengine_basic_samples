@@ -2,5 +2,7 @@
 
 namespace Sample::Boxes
 {
-	App::App() = default;
+	App::App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger) : UserApp(logger)
+	{
+	}
 }
