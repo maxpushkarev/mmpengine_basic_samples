@@ -54,6 +54,20 @@ namespace Sample::Compute
 		}
 		);
 
+
+		MMPEngine::Core::BaseMaterial::Parameters params {
+			std::vector {
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+					"test_buffer",
+						uaBuffer,
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
+					}
+				}
+			}
+		};
+		material->SetParameters(std::move(params));
+
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(computeShader->CreateInitializationTask());
@@ -61,19 +75,6 @@ namespace Sample::Compute
 
 			stream->Schedule(uaBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
-
-			MMPEngine::Core::BaseMaterial::Parameters params {
-				std::vector {
-					MMPEngine::Core::BaseMaterial::Parameters::Entry {
-						"test_buffer",
-							uaBuffer,
-							MMPEngine::Core::BaseMaterial::Parameters::Buffer {
-								MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
-							}
-					}
-				}
-			};
-			stream->Schedule(material->CreateTaskForUpdateParameters(std::move(params)));
 			stream->Schedule(computeJob->CreateInitializationTask());
 
 		}
@@ -150,6 +151,27 @@ namespace Sample::Compute
 		});
 
 
+		MMPEngine::Core::BaseMaterial::Parameters params {
+			std::vector {
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+					"input",
+						uploadBuffer,
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::ReadonlyAccess
+					}
+				},
+					MMPEngine::Core::BaseMaterial::Parameters::Entry {
+					"output",
+						uaBuffer,
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
+					}
+				}
+			}
+		};
+
+		material->SetParameters(std::move(params));
+
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(computeShader->CreateInitializationTask());
@@ -159,26 +181,6 @@ namespace Sample::Compute
 			stream->Schedule(uaBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
 			stream->Schedule(counterReadBack->CreateInitializationTask());
-
-			MMPEngine::Core::BaseMaterial::Parameters params {
-				std::vector {
-					MMPEngine::Core::BaseMaterial::Parameters::Entry {
-						"input",
-							uploadBuffer,
-							MMPEngine::Core::BaseMaterial::Parameters::Buffer {
-							MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::ReadonlyAccess
-						}
-					},
-						MMPEngine::Core::BaseMaterial::Parameters::Entry {
-						"output",
-							uaBuffer,
-							MMPEngine::Core::BaseMaterial::Parameters::Buffer {
-							MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
-						}
-					}
-				}
-			};
-			stream->Schedule(material->CreateTaskForUpdateParameters(std::move(params)));
 			stream->Schedule(computeJob->CreateInitializationTask());
 
 			stream->Schedule(uaBuffer->CreateCopyCounterTask(counterReadBack, sizeof(counterValue), 0));
