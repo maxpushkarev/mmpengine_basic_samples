@@ -10,6 +10,10 @@ namespace Sample::Compute
 		void Initialize() override;
 	private:
 		static constexpr std::size_t _vecSize = 128;
+		struct TestUniform final
+		{
+			std::uint32_t value;
+		};
 		void Test_SetValue();
 		void Test_Filter();
 	};

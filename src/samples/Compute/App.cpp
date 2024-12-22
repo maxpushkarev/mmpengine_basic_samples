@@ -20,6 +20,9 @@ namespace Sample::Compute
 
 	void App::Test_SetValue()
 	{
+		const auto uniform1 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestUniform>>(GetContext());
+		const auto uniform2 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestUniform>>(GetContext());
+
 		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetValue.json"));
 		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), computeShader);
 		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
@@ -31,7 +34,7 @@ namespace Sample::Compute
 
 		for (std::size_t i = 0; i < expectedVec.size(); ++i)
 		{
-			expectedVec[i] = static_cast<std::uint32_t>(i);
+			expectedVec[i] = static_cast<std::uint32_t>(i) * 100 + 10;
 		}
 
 		std::vector<std::uint32_t> readVec(_vecSize, 0);
@@ -63,6 +66,20 @@ namespace Sample::Compute
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
 					}
+				},
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+				"test_uniform1",
+						uniform1,
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
+					}
+				},
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+				"test_uniform2",
+						uniform2,
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
+					}
 				}
 			}
 		};
@@ -71,9 +88,11 @@ namespace Sample::Compute
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(computeShader->CreateInitializationTask());
+			stream->Schedule(uniform1->CreateInitializationTask());
+			stream->Schedule(uniform2->CreateInitializationTask());
+			stream->Schedule(uaBuffer->CreateInitializationTask());
 			stream->Schedule(material->CreateInitializationTask());
 
-			stream->Schedule(uaBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
 			stream->Schedule(computeJob->CreateInitializationTask());
 
@@ -81,6 +100,9 @@ namespace Sample::Compute
 
 		{
 			const auto executor = stream->CreateExecutor();
+
+			stream->Schedule(uniform1->CreateWriteAsyncTask({100}));
+			stream->Schedule(uniform2->CreateWriteAsyncTask({10}));
 
 			const auto computeExecutionTask = computeJob->CreateExecutionTask();
 			computeExecutionTask->GetTaskContext()->dimensions = {1, 1, 1};
