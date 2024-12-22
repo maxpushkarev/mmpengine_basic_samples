@@ -231,7 +231,9 @@ namespace Sample::Buffers
 	{
 		const auto stream = GetDefaultStream();
 
-		const auto uniformBuffer = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestStruct>>(GetContext(), "test_uniform_buffer");
+		const auto uniformBuffer1 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestStruct>>(GetContext(), "test_uniform_buffer1");
+		const auto uniformBuffer2 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestStruct>>(GetContext(), "test_uniform_buffer2");
+
 		const auto readBackBuffer = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(
 			GetContext(),
 			MMPEngine::Core::Buffer::Settings{
@@ -240,23 +242,56 @@ namespace Sample::Buffers
 		}
 		);
 
-		constexpr TestStruct expected {
+		constexpr TestStruct expected1 {
 	{1,2,3,4},
 	{5,6,7,8}
+		};
+
+		constexpr TestStruct expected2{
+	{10,20,30,40},
+	{50,60,70,80}
 		};
 
 		TestStruct actual{};
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(uniformBuffer->CreateInitializationTask());
+			stream->Schedule(uniformBuffer1->CreateInitializationTask());
+			stream->Schedule(uniformBuffer2->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
-			stream->Schedule(uniformBuffer->CreateWriteAsyncTask(expected));
-			stream->Schedule(uniformBuffer->CopyToBuffer(readBackBuffer));
+		}
+
+		{
+			const auto executor = stream->CreateExecutor();
+
+			const auto uniformWriteTask1 = uniformBuffer1->CreateWriteAsyncTask({});
+			const auto uniformWriteTask2 = uniformBuffer2->CreateWriteAsyncTask({});
+
+			uniformWriteTask1->GetTaskContext()->data = expected1;
+			uniformWriteTask2->GetTaskContext()->data = expected2;
+
+			stream->Schedule(uniformWriteTask1);
+			stream->Schedule(uniformWriteTask2);
+
+		}
+
+		{
+			const auto executor = stream->CreateExecutor();
+
+			stream->Schedule(uniformBuffer1->CopyToBuffer(readBackBuffer));
 			stream->Schedule(readBackBuffer->CreateReadTask(&actual, sizeof(actual), 0));
 		}
 
-		assert(std::memcmp(&expected, &actual, sizeof(expected)) == 0);
+		assert(std::memcmp(&expected1, &actual, sizeof(expected1)) == 0);
+
+		{
+			const auto executor = stream->CreateExecutor();
+
+			stream->Schedule(uniformBuffer2->CopyToBuffer(readBackBuffer));
+			stream->Schedule(readBackBuffer->CreateReadTask(&actual, sizeof(actual), 0));
+		}
+
+		assert(std::memcmp(&expected2, &actual, sizeof(expected2)) == 0);
 	}
 
 }
