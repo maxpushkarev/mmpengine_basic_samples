@@ -129,7 +129,7 @@ namespace Sample::Compute
 
 		std::sort(filteredNegative.begin(), filteredNegative.end());
 		std::sort(filteredPositive.begin(), filteredPositive.end());
-;		std::vector<std::int32_t> outputVecPositive(_vecSize, 0);
+		std::vector<std::int32_t> outputVecPositive(_vecSize, 0);
 		std::vector<std::int32_t> outputVecNegative(_vecSize, 0);
 
 		constexpr std::size_t byteLength = _vecSize * sizeof(decltype(outputVecPositive)::value_type);
