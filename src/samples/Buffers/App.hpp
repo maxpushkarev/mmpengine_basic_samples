@@ -18,7 +18,7 @@ namespace Sample::Buffers
 
 		void Test_Upload_To_Resident_To_ReadBack();
 		void Test_Structured_Buffers();
-		void Test_ConstantBufferTo_ReadBack();
+		void Test_UniformBufferTo_ReadBack();
 		void Test_IndexBuffer();
 		void Test_VertexBuffer();
 		static constexpr std::size_t _vecSize = 128;

@@ -13,7 +13,7 @@ namespace Sample::Buffers
 		UserApp::Initialize();
 
 		Test_Upload_To_Resident_To_ReadBack();
-		Test_ConstantBufferTo_ReadBack();
+		Test_UniformBufferTo_ReadBack();
 		Test_Structured_Buffers();
 		Test_IndexBuffer();
 		Test_VertexBuffer();
@@ -227,11 +227,11 @@ namespace Sample::Buffers
 		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
     }
 
-	void App::Test_ConstantBufferTo_ReadBack()
+	void App::Test_UniformBufferTo_ReadBack()
 	{
 		const auto stream = GetDefaultStream();
 
-		const auto constantBuffer = std::make_shared<MMPEngine::Frontend::ConstantBuffer<TestStruct>>(GetContext(), "test_constant_buffer");
+		const auto uniformBuffer = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestStruct>>(GetContext(), "test_uniform_buffer");
 		const auto readBackBuffer = std::make_shared<MMPEngine::Frontend::ReadBackBuffer>(
 			GetContext(),
 			MMPEngine::Core::Buffer::Settings{
@@ -249,10 +249,10 @@ namespace Sample::Buffers
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(constantBuffer->CreateInitializationTask());
+			stream->Schedule(uniformBuffer->CreateInitializationTask());
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
-			stream->Schedule(constantBuffer->CreateWriteAsyncTask(expected));
-			stream->Schedule(constantBuffer->CopyToBuffer(readBackBuffer));
+			stream->Schedule(uniformBuffer->CreateWriteAsyncTask(expected));
+			stream->Schedule(uniformBuffer->CopyToBuffer(readBackBuffer));
 			stream->Schedule(readBackBuffer->CreateReadTask(&actual, sizeof(actual), 0));
 		}
 
