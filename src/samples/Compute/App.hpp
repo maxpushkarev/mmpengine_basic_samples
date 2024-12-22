@@ -10,7 +10,7 @@ namespace Sample::Compute
 		void Initialize() override;
 	private:
 		static constexpr std::size_t _vecSize = 128;
-		void Test_SetThreadId();
+		void Test_SetValue();
 		void Test_Filter();
 	};
 }

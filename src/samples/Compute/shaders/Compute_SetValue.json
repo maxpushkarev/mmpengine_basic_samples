@@ -1,7 +1,7 @@
 {
   "shaderConfig": {
     "Dx12": {
-      "path": "Compute_SetThreadId.cso"
+      "path": "Compute_SetValue.cso"
     },
     "Vulkan": {},
     "Metal": {}

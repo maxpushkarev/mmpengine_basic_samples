@@ -14,13 +14,13 @@ namespace Sample::Compute
 	{
 		UserApp::Initialize();
 
-		Test_SetThreadId();
+		Test_SetValue();
 		Test_Filter();
 	}
 
-	void App::Test_SetThreadId()
+	void App::Test_SetValue()
 	{
-		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetThreadId.json"));
+		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetValue.json"));
 		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), computeShader);
 		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
