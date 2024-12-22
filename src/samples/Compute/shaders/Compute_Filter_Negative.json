@@ -1,7 +1,7 @@
 {
   "shaderConfig": {
     "Dx12": {
-      "path": "Compute_Filter.cso"
+      "path": "Compute_Filter_Negative.cso"
     },
     "Vulkan": {},
     "Metal": {}
