@@ -1,0 +1,9 @@
+{
+  "shaderConfig": {
+    "Dx12": {
+      "path": "Pixel_Test.cso"
+    },
+    "Vulkan": {},
+    "Metal": {}
+  }
+}
