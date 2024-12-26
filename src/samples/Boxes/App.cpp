@@ -1,6 +1,7 @@
 #include <Boxes/App.hpp>
 #include <Frontend/Shader.hpp>
 #include <Frontend/Material.hpp>
+#include <Frontend/Geometry.hpp>
 
 namespace Sample::Boxes
 {
@@ -25,6 +26,8 @@ namespace Sample::Boxes
 
 		const auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		_boxMaterial = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
+
+		const auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 
 		{
 			const auto executor = stream->CreateExecutor();
