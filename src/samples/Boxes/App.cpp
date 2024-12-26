@@ -24,7 +24,9 @@ namespace Sample::Boxes
 			globalContext, std::filesystem::path("Pixel_Test.json")
 		);
 
-		const auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
+		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
+		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
+
 		_boxMaterial = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
 
 		const auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
