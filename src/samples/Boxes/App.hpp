@@ -10,6 +10,9 @@ namespace Sample::Boxes
 	public:
 		App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger);
 		void Initialize() override;
+		void OnNativeWindowUpdated() override;
+		void OnUpdate(std::float_t dt) override;
+		void OnRender() override;
 	private:
 		std::shared_ptr<MMPEngine::Core::MeshMaterial> _material;
 		std::shared_ptr<MMPEngine::Frontend::Mesh> _mesh;

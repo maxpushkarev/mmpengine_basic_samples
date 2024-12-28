@@ -43,4 +43,24 @@ namespace Sample::Boxes
 		}
 	}
 
+	void App::OnNativeWindowUpdated()
+	{
+		UserApp::OnNativeWindowUpdated();
+	}
+
+	void App::OnUpdate(std::float_t dt)
+	{
+		UserApp::OnUpdate(dt);
+	}
+
+	void App::OnRender()
+	{
+		UserApp::OnRender();
+
+		const auto stream = GetDefaultStream();
+
+		{
+			const auto executor = stream->CreateExecutor();
+		}
+	}
 }
