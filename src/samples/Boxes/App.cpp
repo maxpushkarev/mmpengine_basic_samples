@@ -65,7 +65,7 @@ namespace Sample::Boxes
 		const auto stream = GetDefaultStream();
 
 		{
-			//const auto executor = stream->CreateExecutor();
+			const auto executor = stream->CreateExecutor();
 		}
 	}
 }
