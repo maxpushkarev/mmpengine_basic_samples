@@ -27,15 +27,19 @@ namespace Sample::Boxes
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 
-		_boxMaterial = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
+		_material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
 
-		const auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
+		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
+		_mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
 
 		{
 			const auto executor = stream->CreateExecutor();
+
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
-			stream->Schedule(_boxMaterial->CreateInitializationTask());
+			stream->Schedule(_material->CreateInitializationTask());
+
+			stream->Schedule(_mesh->CreateInitializationTask());
 		}
 	}
 

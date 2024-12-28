@@ -1,6 +1,7 @@
 #pragma once
 #include <Feature/App.hpp>
 #include <Core/Material.hpp>
+#include <Frontend/Mesh.hpp>
 
 namespace Sample::Boxes
 {
@@ -10,6 +11,7 @@ namespace Sample::Boxes
 		App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger);
 		void Initialize() override;
 	private:
-		std::shared_ptr<MMPEngine::Core::MeshMaterial> _boxMaterial;
+		std::shared_ptr<MMPEngine::Core::MeshMaterial> _material;
+		std::shared_ptr<MMPEngine::Frontend::Mesh> _mesh;
 	};
 }
