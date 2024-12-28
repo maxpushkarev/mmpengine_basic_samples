@@ -49,7 +49,7 @@ namespace Sample::Boxes
 	{
 		UserApp::OnNativeWindowUpdated();
 
-		_viewportDependentData.release();
+		_viewportDependentData = nullptr;
 		_viewportDependentData = std::make_unique<ViewportDependentData>();
 	}
 
