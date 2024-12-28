@@ -14,7 +14,19 @@ namespace Sample::Boxes
 		void OnUpdate(std::float_t dt) override;
 		void OnRender() override;
 	private:
-		std::shared_ptr<MMPEngine::Core::MeshMaterial> _material;
-		std::shared_ptr<MMPEngine::Frontend::Mesh> _mesh;
+
+		class ViewportIndependentData
+		{
+		public:
+			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
+			std::shared_ptr<MMPEngine::Frontend::Mesh> mesh;
+		};
+
+		class ViewportDependentData
+		{
+		};
+
+		std::unique_ptr<ViewportIndependentData> _viewportIndependentData;
+		std::unique_ptr<ViewportDependentData> _viewportDependentData;
 	};
 }

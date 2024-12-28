@@ -13,6 +13,8 @@ namespace Sample::Boxes
 	{
 		MMPEngine::Feature::UserApp::Initialize();
 
+		_viewportIndependentData = std::make_unique<ViewportIndependentData>();
+
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
@@ -27,25 +29,28 @@ namespace Sample::Boxes
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 
-		_material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
+		_viewportIndependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
 
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
-		_mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
+		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
 
 		{
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
-			stream->Schedule(_material->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->material->CreateInitializationTask());
 
-			stream->Schedule(_mesh->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 		}
 	}
 
 	void App::OnNativeWindowUpdated()
 	{
 		UserApp::OnNativeWindowUpdated();
+
+		_viewportDependentData.release();
+		_viewportDependentData = std::make_unique<ViewportDependentData>();
 	}
 
 	void App::OnUpdate(std::float_t dt)
@@ -60,7 +65,7 @@ namespace Sample::Boxes
 		const auto stream = GetDefaultStream();
 
 		{
-			const auto executor = stream->CreateExecutor();
+			//const auto executor = stream->CreateExecutor();
 		}
 	}
 }
