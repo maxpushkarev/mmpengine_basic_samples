@@ -18,12 +18,19 @@ namespace Sample::Boxes
 		class ViewportIndependentData final
 		{
 		public:
-			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
+			std::tuple<
+				MMPEngine::Core::RenderingMaterial::Settings,
+				std::shared_ptr<MMPEngine::Core::VertexShader>,
+				std::shared_ptr<MMPEngine::Core::PixelShader>
+			> materialData;
 			std::shared_ptr<MMPEngine::Frontend::Mesh> mesh;
+			std::shared_ptr<MMPEngine::Frontend::Mesh::Renderer> renderer;
 		};
 
 		class ViewportDependentData final
 		{
+		public:
+			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
 		};
 
 		std::unique_ptr<ViewportIndependentData> _viewportIndependentData;

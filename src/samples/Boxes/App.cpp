@@ -3,6 +3,8 @@
 #include <Frontend/Material.hpp>
 #include <Frontend/Geometry.hpp>
 
+#include "Core/Node.hpp"
+
 namespace Sample::Boxes
 {
 	App::App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger) : UserApp(logger)
@@ -29,19 +31,21 @@ namespace Sample::Boxes
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 
-		_viewportIndependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
+		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
+
+		_viewportIndependentData->renderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(globalContext, _viewportIndependentData->mesh, std::make_shared<MMPEngine::Core::Node>());
 
 		{
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
-			stream->Schedule(_viewportIndependentData->material->CreateInitializationTask());
 
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
 	}
 
@@ -51,6 +55,21 @@ namespace Sample::Boxes
 
 		_viewportDependentData = nullptr;
 		_viewportDependentData = std::make_unique<ViewportDependentData>();
+
+		const auto stream = GetDefaultStream();
+		const auto globalContext = GetContext();
+
+		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
+			globalContext, 
+			std::get<0>(_viewportIndependentData->materialData), 
+			std::get<1>(_viewportIndependentData->materialData),
+			std::get<2>(_viewportIndependentData->materialData)
+		);
+
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
+		}
 	}
 
 	void App::OnUpdate(std::float_t dt)
