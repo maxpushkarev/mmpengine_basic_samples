@@ -103,7 +103,6 @@ namespace Sample::Boxes
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
 			stream->Schedule(_viewportIndependentData->screenSyncTask);
-			stream->Schedule(MMPEngine::Core::StreamFlushTask::kInstance);
 		}
 	}
 }
