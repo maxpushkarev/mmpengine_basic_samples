@@ -2,6 +2,7 @@
 #include <Feature/App.hpp>
 #include <Core/Material.hpp>
 #include <Frontend/Mesh.hpp>
+#include <Frontend/Screen.hpp>
 
 namespace Sample::Boxes
 {
@@ -18,6 +19,8 @@ namespace Sample::Boxes
 		class ViewportIndependentData final
 		{
 		public:
+			std::shared_ptr<MMPEngine::Frontend::Screen> screen;
+			std::shared_ptr<MMPEngine::Core::BaseTask> screenSyncTask;
 			std::tuple<
 				MMPEngine::Core::RenderingMaterial::Settings,
 				std::shared_ptr<MMPEngine::Core::VertexShader>,

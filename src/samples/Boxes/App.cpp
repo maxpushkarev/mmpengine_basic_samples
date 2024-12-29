@@ -19,6 +19,10 @@ namespace Sample::Boxes
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
+		_viewportIndependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
+			1, 2, true
+		});
+
 		const auto vs = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::VertexShader>(
 			globalContext, std::filesystem::path("Vertex_Test.json")
 		);
@@ -48,6 +52,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 
+			stream->Schedule(_viewportIndependentData->screen->CreateInitializationTask());
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
@@ -55,6 +60,7 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
 
+		_viewportIndependentData->screenSyncTask = _viewportIndependentData->screen->CreateSyncTask();
 		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
 	}
 
@@ -77,6 +83,7 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportIndependentData->screen->CreateTaskToUpdate());
 			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
 	}
@@ -95,6 +102,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
+			stream->Schedule(_viewportIndependentData->screenSyncTask);
 		}
 	}
 }
