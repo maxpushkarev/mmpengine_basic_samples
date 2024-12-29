@@ -35,7 +35,15 @@ namespace Sample::Boxes
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
 
-		_viewportIndependentData->renderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(globalContext, _viewportIndependentData->mesh, std::make_shared<MMPEngine::Core::Node>());
+		_viewportIndependentData->renderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
+			globalContext, 
+			MMPEngine::Core::Mesh::Renderer::Settings {
+				{true},
+				{1}
+			}, 
+			_viewportIndependentData->mesh, 
+			std::make_shared<MMPEngine::Core::Node>()
+		);
 
 		{
 			const auto executor = stream->CreateExecutor();
