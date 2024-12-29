@@ -60,7 +60,7 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
 
-		_viewportIndependentData->screenSyncTask = _viewportIndependentData->screen->CreateTaskToSwapBuffer();
+		_viewportIndependentData->screenSwapTask = _viewportIndependentData->screen->CreateTaskToSwapBuffer();
 		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
 	}
 
@@ -102,7 +102,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
-			stream->Schedule(_viewportIndependentData->screenSyncTask);
+			stream->Schedule(_viewportIndependentData->screenSwapTask);
 		}
 	}
 }
