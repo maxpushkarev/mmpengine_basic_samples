@@ -2,8 +2,7 @@
 #include <Frontend/Shader.hpp>
 #include <Frontend/Material.hpp>
 #include <Frontend/Geometry.hpp>
-
-#include "Core/Node.hpp"
+#include <Core/Node.hpp>
 
 namespace Sample::Boxes
 {
@@ -47,6 +46,8 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
+
+		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
 	}
 
 	void App::OnNativeWindowUpdated()
@@ -85,6 +86,7 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportIndependentData->updateRendererTask);
 		}
 	}
 }

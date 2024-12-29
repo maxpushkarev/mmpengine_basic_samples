@@ -25,6 +25,7 @@ namespace Sample::Boxes
 			> materialData;
 			std::shared_ptr<MMPEngine::Frontend::Mesh> mesh;
 			std::shared_ptr<MMPEngine::Frontend::Mesh::Renderer> renderer;
+			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Mesh::Renderer::UpdateDataTaskContext>> updateRendererTask;
 		};
 
 		class ViewportDependentData final
