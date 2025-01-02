@@ -78,6 +78,7 @@ namespace Sample::Boxes
 			globalContext, 
 			MMPEngine::Core::DepthStencilTargetTexture::Settings {
 				MMPEngine::Core::DepthStencilTargetTexture::Settings::Format::Depth24_Stencil8,
+					std::make_tuple(1.0f, 0),
 				{MMPEngine::Core::TargetTexture::Settings::Antialiasing::MSAA_0, globalContext->windowSize, "depth/stencil"}
 			});
 
