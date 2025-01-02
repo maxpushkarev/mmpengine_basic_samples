@@ -19,9 +19,6 @@ namespace Sample::Boxes
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
-		_viewportIndependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
-			1, 2, true, MMPEngine::Core::Vector4Float {1.0f, 1.0f, 1.0f, 1.0f }
-		});
 
 		const auto vs = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::VertexShader>(
 			globalContext, std::filesystem::path("Vertex_Test.json")
@@ -52,7 +49,6 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 
-			stream->Schedule(_viewportIndependentData->screen->CreateInitializationTask());
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
@@ -60,7 +56,6 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
 
-		_viewportIndependentData->screenSwapTask = _viewportIndependentData->screen->CreateTaskToSwapBuffer();
 		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
 	}
 
@@ -73,6 +68,10 @@ namespace Sample::Boxes
 
 		const auto stream = GetDefaultStream();
 		const auto globalContext = GetContext();
+
+		_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
+			1, 2, true, MMPEngine::Core::Vector4Float {1.0f, 1.0f, 1.0f, 1.0f }
+		});
 
 		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
 			globalContext, 
@@ -91,10 +90,12 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
-			stream->Schedule(_viewportIndependentData->screen->CreateTaskToUpdate());
 			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
+
+		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
 	}
 
 	void App::OnUpdate(std::float_t dt)
@@ -111,7 +112,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
-			stream->Schedule(_viewportIndependentData->screenSwapTask);
+			stream->Schedule(_viewportDependentData->screenSwapTask);
 		}
 	}
 }

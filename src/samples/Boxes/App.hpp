@@ -20,8 +20,6 @@ namespace Sample::Boxes
 		class ViewportIndependentData final
 		{
 		public:
-			std::shared_ptr<MMPEngine::Frontend::Screen> screen;
-			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
 			std::tuple<
 				MMPEngine::Core::RenderingMaterial::Settings,
 				std::shared_ptr<MMPEngine::Core::VertexShader>,
@@ -35,6 +33,8 @@ namespace Sample::Boxes
 		class ViewportDependentData final
 		{
 		public:
+			std::shared_ptr<MMPEngine::Frontend::Screen> screen;
+			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
 			std::shared_ptr<MMPEngine::Frontend::DepthStencilTargetTexture> depthStencilTexture;
 			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
 		};
