@@ -3,6 +3,7 @@
 #include <Core/Material.hpp>
 #include <Frontend/Mesh.hpp>
 #include <Frontend/Screen.hpp>
+#include <Frontend/Texture.hpp>
 
 namespace Sample::Boxes
 {
@@ -34,6 +35,7 @@ namespace Sample::Boxes
 		class ViewportDependentData final
 		{
 		public:
+			std::shared_ptr<MMPEngine::Frontend::DepthStencilTargetTexture> depthStencilTexture;
 			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
 		};
 

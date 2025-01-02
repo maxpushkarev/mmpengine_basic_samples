@@ -74,6 +74,13 @@ namespace Sample::Boxes
 		const auto stream = GetDefaultStream();
 		const auto globalContext = GetContext();
 
+		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
+			globalContext, 
+			MMPEngine::Core::DepthStencilTargetTexture::Settings {
+				MMPEngine::Core::DepthStencilTargetTexture::Settings::Format::Depth24_Stencil8,
+				{MMPEngine::Core::TargetTexture::Settings::Antialiasing::MSAA_0, globalContext->windowSize, "depth/stencil"}
+			});
+
 		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
 			globalContext, 
 			std::get<0>(_viewportIndependentData->materialData), 
@@ -83,6 +90,7 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->screen->CreateTaskToUpdate());
 			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
