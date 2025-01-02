@@ -20,7 +20,7 @@ namespace Sample::Boxes
 		const auto stream = GetDefaultStream();
 
 		_viewportIndependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
-			1, 2, true
+			1, 2, true, MMPEngine::Core::Vector4Float {1.0f, 1.0f, 1.0f, 1.0f }
 		});
 
 		const auto vs = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::VertexShader>(
