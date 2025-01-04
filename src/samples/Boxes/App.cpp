@@ -31,7 +31,7 @@ namespace Sample::Boxes
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 
-		_viewportIndependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
+		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
@@ -56,7 +56,6 @@ namespace Sample::Boxes
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
-			stream->Schedule(_viewportIndependentData->material->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 		}
@@ -91,7 +90,18 @@ namespace Sample::Boxes
 		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
 			globalContext,
 			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
-			_viewportIndependentData->cameraNode
+			_viewportIndependentData->cameraNode,
+			MMPEngine::Core::Camera::Target {
+				{ {nullptr, true} },
+				{_viewportDependentData->depthStencilTexture, true }
+			}
+		);
+
+		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
+			globalContext,
+			std::get<0>(_viewportIndependentData->materialData),
+			std::get<1>(_viewportIndependentData->materialData),
+			std::get<2>(_viewportIndependentData->materialData)
 		);
 
 		{
@@ -99,6 +109,7 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
 
 		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
