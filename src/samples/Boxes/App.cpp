@@ -86,13 +86,19 @@ namespace Sample::Boxes
 				{MMPEngine::Core::TargetTexture::Settings::Antialiasing::MSAA_0, globalContext->windowSize, "depth/stencil"}
 			});
 
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
+		}
+		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
 
 		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
 			globalContext,
 			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
 			_viewportIndependentData->cameraNode,
 			MMPEngine::Core::Camera::Target {
-				{ {nullptr, true} },
+				{ {_viewportDependentData->screen->GetBackBuffer(), true} },
 				{_viewportDependentData->depthStencilTexture, true }
 			}
 		);
@@ -106,13 +112,10 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
-			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
 
-		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
 	}
 
