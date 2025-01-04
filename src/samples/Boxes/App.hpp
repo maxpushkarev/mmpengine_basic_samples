@@ -4,6 +4,7 @@
 #include <Frontend/Mesh.hpp>
 #include <Frontend/Screen.hpp>
 #include <Frontend/Texture.hpp>
+#include <Frontend/Camera.hpp>
 
 namespace Sample::Boxes
 {
@@ -28,6 +29,9 @@ namespace Sample::Boxes
 			std::shared_ptr<MMPEngine::Frontend::Mesh> mesh;
 			std::shared_ptr<MMPEngine::Frontend::Mesh::Renderer> renderer;
 			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Mesh::Renderer::UpdateDataTaskContext>> updateRendererTask;
+			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
+			std::shared_ptr<MMPEngine::Core::Camera> camera;
+			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Camera::UpdateDataTaskContext>> updateCameraTask;
 		};
 
 		class ViewportDependentData final

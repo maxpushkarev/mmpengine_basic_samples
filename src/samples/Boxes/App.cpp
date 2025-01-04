@@ -46,6 +46,15 @@ namespace Sample::Boxes
 			std::make_shared<MMPEngine::Core::Node>()
 		);
 
+		_viewportIndependentData->cameraNode = std::make_shared<MMPEngine::Core::Node>();
+		_viewportIndependentData->cameraNode->localTransform.position = { 0.0f, 0.0f, -5.0f };
+
+		_viewportIndependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
+			globalContext,
+			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
+			_viewportIndependentData->cameraNode
+		);
+
 		{
 			const auto executor = stream->CreateExecutor();
 
@@ -54,9 +63,12 @@ namespace Sample::Boxes
 
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->camera->CreateInitializationTask());
 		}
 
 		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
+		_viewportIndependentData->updateCameraTask = _viewportIndependentData->camera->CreateTaskToUpdateUniformData();
+
 	}
 
 	void App::OnNativeWindowUpdated()
@@ -111,7 +123,10 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
+
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
+
+
 			stream->Schedule(_viewportDependentData->screenSwapTask);
 		}
 	}
