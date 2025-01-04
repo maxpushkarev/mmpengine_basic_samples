@@ -24,9 +24,6 @@ namespace Sample::Compute
 		const auto uniform2 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestUniform>>(GetContext());
 
 		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetValue.json"));
-		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), computeShader);
-		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
-
 		const auto stream = GetDefaultStream();
 
 
@@ -83,7 +80,8 @@ namespace Sample::Compute
 				}
 			}
 		};
-		material->SetParameters(std::move(params));
+		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), std::move(params), computeShader);
+		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -95,7 +93,6 @@ namespace Sample::Compute
 
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
 			stream->Schedule(computeJob->CreateInitializationTask());
-
 		}
 
 		{
@@ -121,12 +118,8 @@ namespace Sample::Compute
 		const auto stream = GetDefaultStream();
 
 		const auto computeShaderPositive = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(globalContext, std::filesystem::path("Compute_Filter_Positive.json"));
-		const auto materialPositive = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, computeShaderPositive);
-		const auto computeJobPositive = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialPositive);
-
 		const auto computeShaderNegative = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(globalContext, std::filesystem::path("Compute_Filter_Negative.json"));
-		const auto materialNegative = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, computeShaderNegative);
-		const auto computeJobNegative= std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialNegative);
+		
 
 		std::vector<std::int32_t> inputVec(_vecSize, 0);
 		std::vector<std::int32_t> filteredPositive {};
@@ -259,9 +252,11 @@ namespace Sample::Compute
 			}
 		};
 
-		materialPositive->SetParameters(std::move(paramsPositive));
-		materialNegative->SetParameters(std::move(paramsNegative));
+		const auto materialPositive = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, std::move(paramsPositive), computeShaderPositive);
+		const auto computeJobPositive = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialPositive);
 
+		const auto materialNegative = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, std::move(paramsNegative), computeShaderNegative);
+		const auto computeJobNegative = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialNegative);
 		{
 			const auto executor = stream->CreateExecutor();
 

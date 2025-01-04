@@ -36,7 +36,7 @@ namespace Sample::Boxes
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
 
-		_viewportIndependentData->renderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
+		_viewportIndependentData->meshRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
 			globalContext, 
 			MMPEngine::Core::Mesh::Renderer::Settings {
 				{true},
@@ -57,10 +57,10 @@ namespace Sample::Boxes
 			stream->Schedule(ps->CreateInitializationTask());
 
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
-			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
 		}
 
-		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
+		_viewportIndependentData->updateRendererTask = _viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData();
 
 	}
 
@@ -103,20 +103,44 @@ namespace Sample::Boxes
 			}
 		);
 
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
+		}
+
+		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
+
+		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
+			std::vector {
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+					"camera_data",
+						_viewportDependentData->camera->GetUniformDataEntity(),
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
+					}
+				},
+				MMPEngine::Core::BaseMaterial::Parameters::Entry {
+				"mesh_data",
+						_viewportIndependentData->meshRenderer->GetUniformDataEntity(),
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
+						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
+					}
+				}
+			}
+		};
+
 		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
 			globalContext,
 			std::get<0>(_viewportIndependentData->materialData),
+			std::move(materialParams),
 			std::get<1>(_viewportIndependentData->materialData),
 			std::get<2>(_viewportIndependentData->materialData)
 		);
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
-
-		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
 	}
 
 	void App::OnUpdate(std::float_t dt)

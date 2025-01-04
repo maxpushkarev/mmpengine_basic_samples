@@ -27,7 +27,7 @@ namespace Sample::Boxes
 				std::shared_ptr<MMPEngine::Core::PixelShader>
 			> materialData;
 			std::shared_ptr<MMPEngine::Core::Mesh> mesh;
-			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> renderer;
+			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> meshRenderer;
 			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Mesh::Renderer::UpdateDataTaskContext>> updateRendererTask;
 			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
 		};
