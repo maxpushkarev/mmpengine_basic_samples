@@ -22,8 +22,8 @@ namespace Sample::Boxes
 		{
 		public:
 			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
-			std::shared_ptr<MMPEngine::Frontend::Mesh> mesh;
-			std::shared_ptr<MMPEngine::Frontend::Mesh::Renderer> renderer;
+			std::shared_ptr<MMPEngine::Core::Mesh> mesh;
+			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> renderer;
 			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Mesh::Renderer::UpdateDataTaskContext>> updateRendererTask;
 			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
 			std::shared_ptr<MMPEngine::Core::Camera> camera;
@@ -33,9 +33,9 @@ namespace Sample::Boxes
 		class ViewportDependentData final
 		{
 		public:
-			std::shared_ptr<MMPEngine::Frontend::Screen> screen;
+			std::shared_ptr<MMPEngine::Core::Screen> screen;
 			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
-			std::shared_ptr<MMPEngine::Frontend::DepthStencilTargetTexture> depthStencilTexture;
+			std::shared_ptr<MMPEngine::Core::DepthStencilTargetTexture> depthStencilTexture;
 		};
 
 		std::unique_ptr<ViewportIndependentData> _viewportIndependentData;
