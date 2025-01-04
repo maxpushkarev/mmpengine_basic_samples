@@ -1,6 +1,6 @@
 #include <Boxes/App.hpp>
 #include <Frontend/Shader.hpp>
-#include <Frontend/Material.hpp>
+#include <Core/Material.hpp>
 #include <Frontend/Geometry.hpp>
 #include <Core/Node.hpp>
 
@@ -126,18 +126,12 @@ namespace Sample::Boxes
 			}
 		};
 
-		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
-			globalContext,
+		_viewportDependentData->material = std::make_shared<MMPEngine::Core::MeshMaterial>(
 			std::get<0>(_viewportIndependentData->materialData),
 			std::move(materialParams),
 			std::get<1>(_viewportIndependentData->materialData),
 			std::get<2>(_viewportIndependentData->materialData)
 		);
-
-		{
-			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
-		}
 	}
 
 	void App::OnUpdate(std::float_t dt)

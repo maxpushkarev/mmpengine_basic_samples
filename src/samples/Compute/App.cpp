@@ -1,6 +1,7 @@
+#include <cassert>
 #include <Compute/App.hpp>
 #include <Frontend/Shader.hpp>
-#include <Frontend/Material.hpp>
+#include <Core/Material.hpp>
 #include <Frontend/Compute.hpp>
 #include <Frontend/Buffer.hpp>
 
@@ -80,7 +81,7 @@ namespace Sample::Compute
 				}
 			}
 		};
-		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), std::move(params), computeShader);
+		const auto material = std::make_shared<MMPEngine::Core::ComputeMaterial>(std::move(params), computeShader);
 		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
 		{
@@ -89,7 +90,6 @@ namespace Sample::Compute
 			stream->Schedule(uniform1->CreateInitializationTask());
 			stream->Schedule(uniform2->CreateInitializationTask());
 			stream->Schedule(uaBuffer->CreateInitializationTask());
-			stream->Schedule(material->CreateInitializationTask());
 
 			stream->Schedule(readBackBuffer->CreateInitializationTask());
 			stream->Schedule(computeJob->CreateInitializationTask());
@@ -252,10 +252,10 @@ namespace Sample::Compute
 			}
 		};
 
-		const auto materialPositive = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, std::move(paramsPositive), computeShaderPositive);
+		const auto materialPositive = std::make_shared<MMPEngine::Core::ComputeMaterial>(std::move(paramsPositive), computeShaderPositive);
 		const auto computeJobPositive = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialPositive);
 
-		const auto materialNegative = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, std::move(paramsNegative), computeShaderNegative);
+		const auto materialNegative = std::make_shared<MMPEngine::Core::ComputeMaterial>(std::move(paramsNegative), computeShaderNegative);
 		const auto computeJobNegative = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(globalContext, materialNegative);
 		{
 			const auto executor = stream->CreateExecutor();
@@ -266,11 +266,9 @@ namespace Sample::Compute
 			stream->Schedule(uaBufferNegative->CreateInitializationTask());
 
 			stream->Schedule(computeShaderPositive->CreateInitializationTask());
-			stream->Schedule(materialPositive->CreateInitializationTask());
 			stream->Schedule(computeJobPositive->CreateInitializationTask());
 
 			stream->Schedule(computeShaderNegative->CreateInitializationTask());
-			stream->Schedule(materialNegative->CreateInitializationTask());
 			stream->Schedule(computeJobNegative->CreateInitializationTask());
 
 			stream->Schedule(readBackBufferPositive->CreateInitializationTask());
