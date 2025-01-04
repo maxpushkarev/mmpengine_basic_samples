@@ -59,9 +59,6 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
 		}
-
-		_viewportIndependentData->updateRendererTask = _viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData();
-
 	}
 
 	void App::OnNativeWindowUpdated()
@@ -156,10 +153,7 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-
-			stream->Schedule(_viewportIndependentData->updateRendererTask);
 			stream->Schedule(_viewportDependentData->updateCameraTask);
-
 
 			stream->Schedule(_viewportDependentData->screenSwapTask);
 		}
