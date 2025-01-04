@@ -26,13 +26,13 @@ namespace Sample::Boxes
 			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> renderer;
 			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Mesh::Renderer::UpdateDataTaskContext>> updateRendererTask;
 			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
-			std::shared_ptr<MMPEngine::Core::Camera> camera;
-			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Camera::UpdateDataTaskContext>> updateCameraTask;
 		};
 
 		class ViewportDependentData final
 		{
 		public:
+			std::shared_ptr<MMPEngine::Core::Camera> camera;
+			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Camera::UpdateDataTaskContext>> updateCameraTask;
 			std::shared_ptr<MMPEngine::Core::Screen> screen;
 			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
 			std::shared_ptr<MMPEngine::Core::DepthStencilTargetTexture> depthStencilTexture;

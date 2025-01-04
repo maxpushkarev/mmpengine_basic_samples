@@ -49,11 +49,6 @@ namespace Sample::Boxes
 		_viewportIndependentData->cameraNode = std::make_shared<MMPEngine::Core::Node>();
 		_viewportIndependentData->cameraNode->localTransform.position = { 0.0f, 0.0f, -5.0f };
 
-		_viewportIndependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
-			globalContext,
-			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
-			_viewportIndependentData->cameraNode
-		);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -64,11 +59,9 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportIndependentData->material->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
-			stream->Schedule(_viewportIndependentData->camera->CreateInitializationTask());
 		}
 
 		_viewportIndependentData->updateRendererTask = _viewportIndependentData->renderer->CreateTaskToUpdateAndWriteUniformData();
-		_viewportIndependentData->updateCameraTask = _viewportIndependentData->camera->CreateTaskToUpdateUniformData();
 
 	}
 
@@ -95,13 +88,21 @@ namespace Sample::Boxes
 			});
 
 
+		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
+			globalContext,
+			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
+			_viewportIndependentData->cameraNode
+		);
+
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
 		}
 
 		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
+		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
 	}
 
 	void App::OnUpdate(std::float_t dt)
@@ -119,7 +120,7 @@ namespace Sample::Boxes
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
-			stream->Schedule(_viewportIndependentData->updateCameraTask);
+			stream->Schedule(_viewportDependentData->updateCameraTask);
 
 
 			stream->Schedule(_viewportDependentData->screenSwapTask);
