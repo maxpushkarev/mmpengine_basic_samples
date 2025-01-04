@@ -31,7 +31,7 @@ namespace Sample::Boxes
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 
-		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
+		_viewportIndependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(globalContext, matSettings, vs, ps);
 
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
@@ -61,6 +61,7 @@ namespace Sample::Boxes
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
+			stream->Schedule(_viewportIndependentData->material->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->renderer->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->camera->CreateInitializationTask());
@@ -93,18 +94,11 @@ namespace Sample::Boxes
 				{MMPEngine::Core::TargetTexture::Settings::Antialiasing::MSAA_0, globalContext->windowSize, "depth/stencil"}
 			});
 
-		_viewportDependentData->material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
-			globalContext, 
-			std::get<0>(_viewportIndependentData->materialData), 
-			std::get<1>(_viewportIndependentData->materialData),
-			std::get<2>(_viewportIndependentData->materialData)
-		);
 
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
-			stream->Schedule(_viewportDependentData->material->CreateInitializationTask());
 		}
 
 		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
