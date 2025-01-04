@@ -119,6 +119,7 @@ namespace Sample::Boxes
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(_viewportIndependentData->updateRendererTask);
+			stream->Schedule(_viewportIndependentData->updateCameraTask);
 
 
 			stream->Schedule(_viewportDependentData->screenSwapTask);
