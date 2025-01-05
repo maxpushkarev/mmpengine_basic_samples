@@ -5,6 +5,7 @@
 #include <Frontend/Screen.hpp>
 #include <Frontend/Texture.hpp>
 #include <Frontend/Camera.hpp>
+#include <Frontend/DrawCall.hpp>
 
 namespace Sample::Boxes
 {
@@ -40,6 +41,8 @@ namespace Sample::Boxes
 			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
 			std::shared_ptr<MMPEngine::Core::DepthStencilTargetTexture> depthStencilTexture;
 			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
+			std::shared_ptr<MMPEngine::Core::Camera::DrawCallsJob> renderJob;
+			std::shared_ptr<MMPEngine::Core::BaseTask> renderJobExecutionTask;
 		};
 
 		std::unique_ptr<ViewportIndependentData> _viewportIndependentData;

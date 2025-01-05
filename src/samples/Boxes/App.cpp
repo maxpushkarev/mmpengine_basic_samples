@@ -100,12 +100,20 @@ namespace Sample::Boxes
 			}
 		);
 
+		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
+			globalContext,
+			_viewportDependentData->camera,
+			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item> {}
+		);
+
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
 		}
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
@@ -148,7 +156,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->updateCameraTask);
-
+			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenSwapTask);
 		}
 	}
