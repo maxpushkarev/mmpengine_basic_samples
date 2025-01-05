@@ -7,5 +7,6 @@ namespace Sample::Empty
 	{
 	public:
 		App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger);
+		void Initialize() override;
 	};
 }
