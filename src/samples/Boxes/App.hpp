@@ -40,7 +40,6 @@ namespace Sample::Boxes
 			std::shared_ptr<MMPEngine::Core::Screen> screen;
 			std::shared_ptr<MMPEngine::Core::BaseTask> screenSwapTask;
 			std::shared_ptr<MMPEngine::Core::DepthStencilTargetTexture> depthStencilTexture;
-			std::shared_ptr<MMPEngine::Core::MeshMaterial> material;
 			std::shared_ptr<MMPEngine::Core::Camera::DrawCallsJob> renderJob;
 			std::shared_ptr<MMPEngine::Core::BaseTask> renderJobExecutionTask;
 		};

@@ -100,20 +100,10 @@ namespace Sample::Boxes
 			}
 		);
 
-		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
-			globalContext,
-			_viewportDependentData->camera,
-			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item> {}
-		);
-
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
-			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
 		}
-
-		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
@@ -134,12 +124,33 @@ namespace Sample::Boxes
 			}
 		};
 
-		_viewportDependentData->material = std::make_shared<MMPEngine::Core::MeshMaterial>(
+		const auto material = std::make_shared<MMPEngine::Core::MeshMaterial>(
 			std::get<0>(_viewportIndependentData->materialData),
 			std::move(materialParams),
 			std::get<1>(_viewportIndependentData->materialData),
 			std::get<2>(_viewportIndependentData->materialData)
 		);
+
+
+		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
+			globalContext,
+			_viewportDependentData->camera,
+			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
+				MMPEngine::Core::Camera::DrawCallsJob::Item{
+					_viewportIndependentData->meshRenderer,
+					material
+				}
+			}
+		);
+
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
+		}
+
+		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+
 	}
 
 	void App::OnUpdate(std::float_t dt)
