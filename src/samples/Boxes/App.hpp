@@ -1,5 +1,6 @@
 #pragma once
 #include <Feature/App.hpp>
+#include <Feature/Movement.hpp>
 #include <Core/Material.hpp>
 #include <Frontend/Mesh.hpp>
 #include <Frontend/Screen.hpp>
@@ -30,6 +31,7 @@ namespace Sample::Boxes
 			std::shared_ptr<MMPEngine::Core::Mesh> mesh;
 			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> meshRenderer;
 			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
+			std::unique_ptr<MMPEngine::Feature::Movement::Controller> cameraMovement;
 		};
 
 		class ViewportDependentData final

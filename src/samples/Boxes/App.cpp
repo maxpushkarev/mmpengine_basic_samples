@@ -50,6 +50,12 @@ namespace Sample::Boxes
 		_viewportIndependentData->cameraNode = std::make_shared<MMPEngine::Core::Node>();
 		_viewportIndependentData->cameraNode->localTransform.position = { 0.0f, 0.0f, -5.0f };
 
+		_viewportIndependentData->cameraMovement = std::make_unique<MMPEngine::Feature::Movement::FreeController>(
+			MMPEngine::Feature::Movement::FreeController::Settings {},
+			globalContext,
+			GetInput().get(),
+			_viewportIndependentData->cameraNode
+		);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -162,6 +168,8 @@ namespace Sample::Boxes
 	void App::OnUpdate(std::float_t dt)
 	{
 		UserApp::OnUpdate(dt);
+
+		_viewportIndependentData->cameraMovement->Update(dt);
 	}
 
 	void App::OnRender()
