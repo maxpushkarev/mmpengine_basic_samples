@@ -8,5 +8,6 @@ VertexOut EntryPoint(VertexIn vin)
 	float4 worldPos = mul(meshRendererData.worldMat, float4(vin.pos, 1.0f));
 	float4 viewPos = mul(cameraData.viewMat, worldPos);
 	vout.pos = mul(cameraData.projMat, viewPos);
+
 	return vout;
 }

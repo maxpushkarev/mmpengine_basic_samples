@@ -29,8 +29,8 @@ namespace Sample::Boxes
 		);
 
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
-		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::Solid;
-		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::None;
+		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
+		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::Back;
 
 		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
@@ -59,6 +59,11 @@ namespace Sample::Boxes
 
 			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
 			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
+		}
+
+		{
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
 		}
 	}
 
