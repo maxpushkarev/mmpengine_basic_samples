@@ -29,7 +29,8 @@ namespace Sample::Boxes
 		);
 
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings {};
-		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
+		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::Solid;
+		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::None;
 
 		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
