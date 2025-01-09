@@ -84,7 +84,7 @@ namespace Sample::Boxes
 		const auto globalContext = GetContext();
 
 		_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
-			1, 2, true, MMPEngine::Core::Vector4Float {0.0f, 0.0f, 1.0f, 1.0f }
+			1, 2, true, MMPEngine::Core::Vector4Float {0.0f, 0.0f, 0.0f, 0.0f }
 		});
 
 		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
