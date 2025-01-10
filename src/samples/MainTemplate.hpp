@@ -47,6 +47,7 @@ inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::
 	auto rootApp = MMPEngine::Feature::App::BuildRootApp(appContextSettings, std::move(userApp), nullptr, logger);
 
 	MMPEngine::Feature::Win::AppContainer::Settings appContainerSettings {};
+	appContainerSettings.base.targetFps = 360;
 	appContainerSettings.base = { userAppName };
 	appContainerSettings.platform = { hInstance };
 
