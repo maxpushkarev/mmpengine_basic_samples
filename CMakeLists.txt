@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.7)
 project(mmpengine_basic_samples VERSION 1.0.0 LANGUAGES C CXX)
 
 IF (WIN32)
@@ -27,11 +27,20 @@ function(addSample appName)
 	SET(RuntimeOutputDir ${CMAKE_SOURCE_DIR}/bin/${appName})
 	set_property(TARGET ${appName} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${RuntimeOutputDir})
 
+	IF (NOT APPLE)
+		include(FindVulkan)
+		IF(${Vulkan_FOUND})
+			get_property(vulkan_macro_tmp GLOBAL PROPERTY MMPENGINE_VULKAN_MACRO)
+			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
+		ENDIF()
+	ENDIF()
+
 	IF (WIN32)
 		get_property(win_macro_tmp GLOBAL PROPERTY MMPENGINE_WIN_MACRO)
 		get_property(dx12_macro_tmp GLOBAL PROPERTY MMPENGINE_DX12_MACRO)
 		target_compile_definitions(${appName} PRIVATE ${win_macro_tmp}=1)
 		target_compile_definitions(${appName} PRIVATE ${dx12_macro_tmp}=1)
+		
 		set_target_properties(${appName} PROPERTIES WIN32_EXECUTABLE TRUE)
 		
 		if (CMAKE_GENERATOR MATCHES "Visual Studio")
