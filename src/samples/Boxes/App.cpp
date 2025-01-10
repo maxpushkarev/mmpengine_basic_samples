@@ -37,6 +37,12 @@ namespace Sample::Boxes
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
 		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
 
+		const auto meshRendererNode = std::make_shared<MMPEngine::Core::Node>();
+
+		meshRendererNode->localTransform.position.x += 1.0f;
+		meshRendererNode->localTransform.position.y += 1.0f;
+		meshRendererNode->localTransform.position.z += 1.0f;
+
 		_viewportIndependentData->meshRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
 			globalContext, 
 			MMPEngine::Core::Mesh::Renderer::Settings {
@@ -44,7 +50,7 @@ namespace Sample::Boxes
 				{1}
 			}, 
 			_viewportIndependentData->mesh, 
-			std::make_shared<MMPEngine::Core::Node>()
+			meshRendererNode
 		);
 
 		_viewportIndependentData->cameraNode = std::make_shared<MMPEngine::Core::Node>();
