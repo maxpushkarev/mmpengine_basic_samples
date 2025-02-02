@@ -32,6 +32,10 @@ function(addSample appName)
 		IF(${Vulkan_FOUND})
 			get_property(vulkan_macro_tmp GLOBAL PROPERTY MMPENGINE_VULKAN_MACRO)
 			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
+			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
+			
+			target_link_libraries(${appName} PRIVATE ${Vulkan_LIBRARIES})
+			target_include_directories(${appName} PRIVATE ${Vulkan_INCLUDE_DIRS})
 		ENDIF()
 	ENDIF()
 

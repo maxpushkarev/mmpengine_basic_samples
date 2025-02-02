@@ -5,7 +5,7 @@
 std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 	PSTR, std::int32_t)
 {
-	return MainTemplate::WinMain<Sample::Empty::App>(hInstance, MMPEngine::Core::BackendType::Dx12, "Empty");
+	return MainTemplate::WinMain<Sample::Empty::App>(hInstance, MMPEngine::Core::BackendType::Vulkan, "Empty");
 	//return MainTemplate::SharedMain<Sample::Empty::App>(MMPEngine::Core::BackendType::Dx12, "Empty");
 }
 #endif
