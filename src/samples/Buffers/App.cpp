@@ -13,10 +13,10 @@ namespace Sample::Buffers
 		UserApp::Initialize();
 
 		Test_Upload_To_Resident_To_ReadBack();
-		/*Test_UniformBufferTo_ReadBack();
-		Test_Structured_Buffers();
-		Test_IndexBuffer();
-		Test_VertexBuffer();*/
+		//Test_UniformBufferTo_ReadBack();
+		//Test_Structured_Buffers();
+		//Test_IndexBuffer();
+		//Test_VertexBuffer();
 	}
 
 	void App::Test_Upload_To_Resident_To_ReadBack()
@@ -64,14 +64,14 @@ namespace Sample::Buffers
 			stream->Schedule(readBack->CreateInitializationTask());
 			stream->Schedule(resident->CreateInitializationTask());
 
-			//stream->Schedule(uploadBuffer->CreateWriteTask(uploadVec.data(), byteLength));
-			//stream->Schedule(uploadBuffer->CopyToBuffer(resident));
-			//stream->Schedule(resident->CopyToBuffer(readBack));
-			//stream->Schedule(readBack->CreateReadTask(readBackVec.data(), byteLength, 0));
+			stream->Schedule(uploadBuffer->CreateWriteTask(uploadVec.data(), byteLength));
+			stream->Schedule(uploadBuffer->CopyToBuffer(resident));
+			stream->Schedule(resident->CopyToBuffer(readBack));
+			stream->Schedule(readBack->CreateReadTask(readBackVec.data(), byteLength, 0));
 		}
 
 
-		//assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
+		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
 	}
 
 	void App::Test_IndexBuffer()
