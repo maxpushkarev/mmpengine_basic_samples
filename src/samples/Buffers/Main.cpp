@@ -5,7 +5,7 @@
 std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 	PSTR, std::int32_t)
 {
-	//return MainTemplate::WinMain<Sample::Buffers::App>(hInstance, MMPEngine::Core::BackendType::Dx12, "Buffers");
-	return MainTemplate::SharedMain<Sample::Buffers::App>(MMPEngine::Core::BackendType::Vulkan, "Buffers");
+	return MainTemplate::WinMain<Sample::Buffers::App>(hInstance, MMPEngine::Core::BackendType::Dx12, "Buffers");
+	//return MainTemplate::SharedMain<Sample::Buffers::App>(MMPEngine::Core::BackendType::Vulkan, "Buffers");
 }
 #endif
