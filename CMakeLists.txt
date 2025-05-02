@@ -1,11 +1,20 @@
 cmake_minimum_required(VERSION 3.7)
 project(mmpengine_basic_samples VERSION 1.0.0 LANGUAGES C CXX)
+include(FindVulkan)
 
 IF (WIN32)
 	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address")
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
 endif()
 
+IF(${Vulkan_FOUND})
+	find_program(GLSLANG_VALIDATOR glslangValidator HINTS ENV VULKAN_SDK)
+
+	if (NOT GLSLANG_VALIDATOR)
+		message(FATAL_ERROR "glslangValidator not found. Please install Vulkan SDK.")
+	endif()
+	
+endif()
 
 add_subdirectory(libs/mmpengine)
 
@@ -28,7 +37,6 @@ function(addSample appName)
 	set_property(TARGET ${appName} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${RuntimeOutputDir})
 
 	IF (NOT APPLE)
-		include(FindVulkan)
 		IF(${Vulkan_FOUND})
 			get_property(vulkan_macro_tmp GLOBAL PROPERTY MMPENGINE_VULKAN_MACRO)
 			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
@@ -59,7 +67,7 @@ function(addSample appName)
 		target_compile_definitions(${appName} PRIVATE ${macosx_macro_tmp}=1)
 	ENDIF()
 
-	#shdders
+	#shdder configs
 	file (GLOB shaderConfigurationFiles src/samples/${appName}/shaders/*.json)
 	
 	foreach( shader_cfg ${shaderConfigurationFiles})
@@ -73,32 +81,58 @@ function(addSample appName)
 		
 	endforeach( shader_cfg ${shaderConfigurationFiles} )
 	
-	#hlsl shaders
-	list(APPEND hlsl_shader_types Vertex Pixel Geometry Hull Domain Compute Amplification Mesh Library)
-	file (GLOB hlslShaders src/samples/${appName}/shaders/*.hlsl)
-	foreach( hlsl_shader ${hlslShaders})
 	
-		target_sources(${appName} PRIVATE ${hlsl_shader})
+	IF (WIN32)
+		#hlsl shaders
+		list(APPEND hlsl_shader_types Vertex Pixel Geometry Hull Domain Compute Amplification Mesh Library)
+		file (GLOB hlslShaders src/samples/${appName}/shaders/*.hlsl)
+		foreach( hlsl_shader ${hlslShaders})
 		
-		get_filename_component(shaderNameWE ${hlsl_shader} NAME_WE)
-		
-		SET(shaderType "unknown")
-		
-		foreach(Type IN LISTS hlsl_shader_types)
-			if(${shaderNameWE} MATCHES "^${Type}_")
-				SET(shaderType ${Type})
+			target_sources(${appName} PRIVATE ${hlsl_shader})
+			
+			get_filename_component(shaderNameWE ${hlsl_shader} NAME_WE)
+			
+			SET(shaderType "unknown")
+			
+			foreach(Type IN LISTS hlsl_shader_types)
+				if(${shaderNameWE} MATCHES "^${Type}_")
+					SET(shaderType ${Type})
+				endif()
+			endforeach()
+			
+			if (CMAKE_GENERATOR MATCHES "Visual Studio")
+				set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_ENTRYPOINT "EntryPoint")
+				set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_TYPE ${shaderType})
+				set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_MODEL "6.5")
+			else()
+				#TODO: support
 			endif()
-		endforeach()
-		
-		if (CMAKE_GENERATOR MATCHES "Visual Studio")
-			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_ENTRYPOINT "EntryPoint")
-			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_TYPE ${shaderType})
-			set_source_files_properties( ${hlsl_shader} PROPERTIES VS_SHADER_MODEL "6.5")
-		else()
-			#TODO: support
-		endif()
 
-	endforeach( hlsl_shader ${hlslShaders} )
+		endforeach( hlsl_shader ${hlslShaders} )
+	ENDIF()
+	
+	IF (NOT APPLE)
+		IF(${Vulkan_FOUND})
+			file (GLOB glslFiles src/samples/${appName}/shaders/*.glsl)
+			foreach( glsl_file ${glslFiles})
+				target_sources(${appName} PRIVATE ${glsl_file})
+				
+				if (CMAKE_GENERATOR MATCHES "Visual Studio")
+					get_filename_component(filename ${glsl_file} NAME)
+					set(output_spirv "${VSWorkingDir}/${filename}.spv")
+					add_custom_command(
+						TARGET ${appName} POST_BUILD
+						COMMAND ${GLSLANG_VALIDATOR} -V ${glsl_file} -o ${output_spirv}
+						COMMENT "Compiling GLSL shader ${glsl_file} to ${output_spirv}"
+					)
+					
+				else()
+					#TODO: support
+				endif()
+						
+			endforeach( glsl_file ${glslFiles} )
+		ENDIF()
+	ENDIF()
 	
 endfunction()
 

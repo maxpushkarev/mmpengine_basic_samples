@@ -3,7 +3,9 @@
     "Dx12": {
       "path": "Compute_SetValue.cso"
     },
-    "Vulkan": {},
+    "Vulkan": {
+      "path": "Compute_SetValue.comp.glsl.spv"
+    },
     "Metal": {}
   }
 }
