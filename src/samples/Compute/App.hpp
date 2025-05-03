@@ -14,6 +14,7 @@ namespace Sample::Compute
 		{
 			std::uint32_t value;
 		};
+
 		void Test_SetValue();
 		void Test_Filter();
 	};
