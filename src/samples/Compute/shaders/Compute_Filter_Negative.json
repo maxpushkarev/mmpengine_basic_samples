@@ -3,7 +3,9 @@
     "Dx12": {
       "path": "Compute_Filter_Negative.cso"
     },
-    "Vulkan": {},
+    "Vulkan": {
+      "path": "Compute_Filter_Negative.comp.glsl.spv"
+    },
     "Metal": {}
   }
 }
