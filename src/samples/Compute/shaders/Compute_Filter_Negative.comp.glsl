@@ -1,17 +1,23 @@
 #version 450
 
-layout(set = 0, binding = 0) buffer Buffer {
-    uint outputData[];
+layout(std430, set = 0, binding = 0) buffer InputBuffer {
+    int inputData[];
 };
 
-layout(set = 1, binding = 0) uniform GlobalUniforms0 {
-    uint multiplier;
-} ubo0;
+layout(std430, set = 0, binding = 1) buffer OutputBuffer {
+    int outputData[];
+};
 
-layout(set = 1, binding = 1) uniform GlobalUniforms1 {
-    uint addition;
-} ubo1;
+layout(std430, set = 0, binding = 2) buffer OutputBuffer_Counter {
+   uint currentStateCounter;
+};
 
+layout (local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 void main() {
-	outputData[gl_GlobalInvocationID.x] = gl_GlobalInvocationID.x * ubo0.multiplier + ubo1.addition;
+	const int inputValue = inputData[gl_GlobalInvocationID.x];
+	if (inputValue < 0)
+	{
+		uint i = atomicAdd(currentStateCounter, 1);
+		outputData[i] = inputValue;
+	}
 }
