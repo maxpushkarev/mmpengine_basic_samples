@@ -60,6 +60,7 @@ namespace Sample::Compute
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"test_buffer",
+						"Buffer",
 						uaBuffer,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
@@ -67,6 +68,7 @@ namespace Sample::Compute
 				},
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 				"test_uniform1",
+					"uniform",
 						uniform1,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
@@ -74,6 +76,7 @@ namespace Sample::Compute
 				},
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 				"test_uniform2",
+					"uniform",
 						uniform2,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
@@ -217,6 +220,7 @@ namespace Sample::Compute
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"input",
+					"set",
 						uploadBufferPositive,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::ReadonlyAccess
@@ -224,6 +228,7 @@ namespace Sample::Compute
 				},
 					MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"output",
+						"set",
 						uaBufferPositive,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
@@ -237,6 +242,7 @@ namespace Sample::Compute
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"input",
+					"set",
 						uploadBufferNegative,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::ReadonlyAccess
@@ -244,6 +250,7 @@ namespace Sample::Compute
 				},
 					MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"output",
+						"set",
 						uaBufferNegative,
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
