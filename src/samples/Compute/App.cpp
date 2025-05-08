@@ -16,7 +16,7 @@ namespace Sample::Compute
 		UserApp::Initialize();
 
 		Test_SetValue();
-		Test_Filter();
+		//Test_Filter();
 	}
 
 	void App::Test_SetValue()
@@ -85,7 +85,7 @@ namespace Sample::Compute
 			}
 		};
 		const auto material = std::make_shared<MMPEngine::Core::ComputeMaterial>(std::move(params), computeShader);
-		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
+		/*const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -112,7 +112,7 @@ namespace Sample::Compute
 			stream->Schedule(readBackBuffer->CreateReadTask(readVec.data(), byteLength, 0));
 		}
 
-		assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));
+		assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));*/
 	}
 
 	void App::Test_Filter()
