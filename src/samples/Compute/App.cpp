@@ -27,7 +27,6 @@ namespace Sample::Compute
 		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetValue.json"));
 		const auto stream = GetDefaultStream();
 
-
 		std::vector<std::uint32_t> expectedVec(_vecSize, 0);
 
 		for (std::size_t i = 0; i < expectedVec.size(); ++i)
