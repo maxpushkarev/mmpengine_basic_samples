@@ -84,7 +84,7 @@ namespace Sample::Compute
 			}
 		};
 		const auto material = std::make_shared<MMPEngine::Core::ComputeMaterial>(std::move(params), computeShader);
-		/*const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
+		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -97,7 +97,7 @@ namespace Sample::Compute
 			stream->Schedule(computeJob->CreateInitializationTask());
 		}
 
-		{
+		/*{
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(uniform1->CreateWriteAsyncTask({100}));
