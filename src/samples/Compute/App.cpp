@@ -97,7 +97,7 @@ namespace Sample::Compute
 			stream->Schedule(computeJob->CreateInitializationTask());
 		}
 
-		/*{
+		{
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(uniform1->CreateWriteAsyncTask({100}));
@@ -111,7 +111,7 @@ namespace Sample::Compute
 			stream->Schedule(readBackBuffer->CreateReadTask(readVec.data(), byteLength, 0));
 		}
 
-		assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));*/
+		assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));
 	}
 
 	void App::Test_Filter()
