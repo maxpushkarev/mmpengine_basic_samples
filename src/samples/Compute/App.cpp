@@ -288,10 +288,10 @@ namespace Sample::Compute
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, sizeof(counterValuePositive), 0));
+			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, 0));
 			stream->Schedule(counterReadBackPositive->CreateReadTask(&counterValuePositive, sizeof(counterValuePositive), 0));
 
-			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, sizeof(counterValueNegative), 0));
+			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, 0));
 			stream->Schedule(counterReadBackNegative->CreateReadTask(&counterValueNegative, sizeof(counterValueNegative), 0));
 		}
 
@@ -316,14 +316,14 @@ namespace Sample::Compute
 			stream->Schedule(uaBufferPositive->CopyToBuffer(readBackBufferPositive));
 			stream->Schedule(readBackBufferPositive->CreateReadTask(outputVecPositive.data(), byteLength, 0));
 
-			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, sizeof(counterValuePositive), 0));
+			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, 0));
 			stream->Schedule(counterReadBackPositive->CreateReadTask(&counterValuePositive, sizeof(counterValuePositive), 0));
 
 
 			stream->Schedule(uaBufferNegative->CopyToBuffer(readBackBufferNegative));
 			stream->Schedule(readBackBufferNegative->CreateReadTask(outputVecNegative.data(), byteLength, 0));
 
-			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, sizeof(counterValueNegative), 0));
+			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, 0));
 			stream->Schedule(counterReadBackNegative->CreateReadTask(&counterValueNegative, sizeof(counterValueNegative), 0));
 		}
 
@@ -354,12 +354,12 @@ namespace Sample::Compute
 			stream->Schedule(uaBufferNegative->CreateResetCounterTask());
 
 			stream->Schedule(uaBufferNegative->CopyToBuffer(readBackBufferNegative));
-			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, sizeof(counterValueNegative), 0));
+			stream->Schedule(uaBufferNegative->CreateCopyCounterTask(counterReadBackNegative, 0));
 			stream->Schedule(counterReadBackNegative->CreateReadTask(&counterValueNegative, sizeof(counterValueNegative), 0));
 			stream->Schedule(readBackBufferNegative->CreateReadTask(outputVecNegative.data(), sizeof(decltype(outputVecNegative)::value_type) * outputVecNegative.size(), 0));
 
 			stream->Schedule(uaBufferPositive->CopyToBuffer(readBackBufferPositive));
-			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, sizeof(counterValuePositive), 0));
+			stream->Schedule(uaBufferPositive->CreateCopyCounterTask(counterReadBackPositive, 0));
 			stream->Schedule(counterReadBackPositive->CreateReadTask(&counterValuePositive, sizeof(counterValuePositive), 0));
 			stream->Schedule(readBackBufferPositive->CreateReadTask(outputVecPositive.data(), sizeof(decltype(outputVecPositive)::value_type)* outputVecPositive.size(), 0));
 		}
