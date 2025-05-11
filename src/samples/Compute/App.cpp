@@ -298,7 +298,7 @@ namespace Sample::Compute
 		assert(counterValuePositive == 0);
 		assert(counterValueNegative == 0);
 
-		/*{
+		{
 			const auto executor = stream->CreateExecutor();
 
 			stream->Schedule(uploadBufferPositive->CreateWriteTask(inputVec.data(), byteLength, 0));
@@ -371,7 +371,7 @@ namespace Sample::Compute
 
 		assert(counterValueNegative == 0);
 		std::sort(outputVecNegative.begin(), outputVecNegative.end());
-		assert(std::equal(filteredNegative.cbegin(), filteredNegative.cend(), outputVecNegative.cbegin()));*/
+		assert(std::equal(filteredNegative.cbegin(), filteredNegative.cend(), outputVecNegative.cbegin()));
 	}
 
 }
