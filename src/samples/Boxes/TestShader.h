@@ -26,4 +26,19 @@ struct VertexOut
 
 #endif
 
+
+#if MMPENGINE_GLSL
+
+layout(std140, set = 0, binding = 0, row_major) uniform SceneData {
+	CameraData cameraData;
+} sceneData;
+
+layout(std140, set = 1, binding = 0, row_major) uniform ObjectData {
+	MeshRendererData meshRendererData;
+} objectData;
+
+layout(location = 0) in vec3 inPosition;
+
+#endif
+
 #endif
