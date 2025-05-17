@@ -4,7 +4,7 @@
       "path": "Pixel_Test.cso"
     },
     "Vulkan": {
-      "path": "Pixel_Test.frag.glsl.spv"
+      "path": "Pixel_Test.frag.spv"
     },
     "Metal": {}
   }

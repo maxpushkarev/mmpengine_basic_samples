@@ -37,8 +37,6 @@ layout(std140, set = 1, binding = 0, row_major) uniform ObjectData {
 	MeshRendererData meshRendererData;
 } objectData;
 
-layout(location = 0) in vec3 inPosition;
-
 #endif
 
 #endif

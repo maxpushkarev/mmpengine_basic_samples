@@ -128,7 +128,7 @@ function(addSample appName)
 					add_custom_command(
 						TARGET ${appName} POST_BUILD
 						COMMAND glslc -Ishaders/includes ${shader_file} -o ${output_spirv}
-						COMMENT "Compiling GLSL shader ${shader_file} to ${output_spirv}\n"
+						COMMENT "Compiling GLSL shader ${shader_file} to ${output_spirv};"
 					)
 					
 				else()
