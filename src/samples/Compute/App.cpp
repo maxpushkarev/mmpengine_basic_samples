@@ -54,7 +54,6 @@ namespace Sample::Compute
 		}
 		);
 
-
 		MMPEngine::Core::BaseMaterial::Parameters params {
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {

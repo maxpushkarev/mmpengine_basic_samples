@@ -4,7 +4,7 @@
       "path": "Compute_Filter_Negative.cso"
     },
     "Vulkan": {
-      "path": "Compute_Filter_Negative.comp.glsl.spv"
+      "path": "Compute_Filter_Negative.comp.spv"
     },
     "Metal": {}
   }

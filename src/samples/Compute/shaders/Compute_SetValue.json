@@ -4,7 +4,7 @@
       "path": "Compute_SetValue.cso"
     },
     "Vulkan": {
-      "path": "Compute_SetValue.comp.glsl.spv"
+      "path": "Compute_SetValue.comp.spv"
     },
     "Metal": {}
   }

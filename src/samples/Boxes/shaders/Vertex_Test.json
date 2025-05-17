@@ -3,7 +3,9 @@
     "Dx12": {
       "path": "Vertex_Test.cso"
     },
-    "Vulkan": {},
+    "Vulkan": {
+      "path": "Vertex_Test.vert.glsl.spv"
+    },
     "Metal": {}
   }
 }

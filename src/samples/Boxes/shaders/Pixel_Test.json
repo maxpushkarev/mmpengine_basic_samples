@@ -3,7 +3,9 @@
     "Dx12": {
       "path": "Pixel_Test.cso"
     },
-    "Vulkan": {},
+    "Vulkan": {
+      "path": "Pixel_Test.frag.glsl.spv"
+    },
     "Metal": {}
   }
 }

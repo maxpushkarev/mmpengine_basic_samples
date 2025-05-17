@@ -113,24 +113,29 @@ function(addSample appName)
 	
 	IF (NOT APPLE)
 		IF(${Vulkan_FOUND})
-			file (GLOB glslFiles src/samples/${appName}/shaders/*.glsl)
-			foreach( glsl_file ${glslFiles})
-				target_sources(${appName} PRIVATE ${glsl_file})
+			set(shader_files_folder src/samples/${appName}/shaders)
+			file (GLOB shaderFiles 
+				${shader_files_folder}/*.vert
+				${shader_files_folder}/*.frag
+				${shader_files_folder}/*.comp
+			)
+			foreach( shader_file ${shaderFiles})
+				target_sources(${appName} PRIVATE ${shader_file})
 				
 				if (CMAKE_GENERATOR MATCHES "Visual Studio")
-					get_filename_component(filename ${glsl_file} NAME)
+					get_filename_component(filename ${shader_file} NAME)
 					set(output_spirv "${VSWorkingDir}/${filename}.spv")
 					add_custom_command(
 						TARGET ${appName} POST_BUILD
-						COMMAND ${GLSLANG_VALIDATOR} -V ${glsl_file} -o ${output_spirv}
-						COMMENT "Compiling GLSL shader ${glsl_file} to ${output_spirv}"
+						COMMAND glslc -Ishaders/includes ${shader_file} -o ${output_spirv}
+						COMMENT "Compiling GLSL shader ${shader_file} to ${output_spirv}\n"
 					)
 					
 				else()
 					#TODO: support
 				endif()
 						
-			endforeach( glsl_file ${glslFiles} )
+			endforeach( shader_file ${shaderFiles} )
 		ENDIF()
 	ENDIF()
 	
