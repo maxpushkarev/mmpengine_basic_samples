@@ -127,6 +127,7 @@ namespace Sample::Boxes
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
+						"scene",
 						_viewportDependentData->camera->GetUniformDataEntity(),
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
@@ -134,6 +135,7 @@ namespace Sample::Boxes
 				},
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 				"mesh_data",
+					"object",
 						_viewportIndependentData->meshRenderer->GetUniformDataEntity(),
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
