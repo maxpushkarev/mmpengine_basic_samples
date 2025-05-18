@@ -28,7 +28,7 @@ namespace Sample::Boxes
 			globalContext, std::filesystem::path("Pixel_Test.json")
 		);
 
-		/*auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
+		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::None;
 
@@ -61,7 +61,7 @@ namespace Sample::Boxes
 			globalContext,
 			GetInput().get(),
 			_viewportIndependentData->cameraNode
-		);*/
+		);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -69,14 +69,14 @@ namespace Sample::Boxes
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
-			//stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
-			//stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
 		}
 
-		/*{
+		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
-		}*/
+		}
 	}
 
 	void App::OnNativeWindowUpdated()
@@ -93,22 +93,22 @@ namespace Sample::Boxes
 			1, 2, true, MMPEngine::Core::Vector4Float {0.0f, 0.0f, 0.0f, 0.0f }
 		});
 
-		/*_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
+		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
 			globalContext, 
 			MMPEngine::Core::DepthStencilTargetTexture::Settings {
 				MMPEngine::Core::DepthStencilTargetTexture::Settings::Format::Depth24_Stencil8,
 					std::make_tuple(1.0f, 0),
 				{MMPEngine::Core::TargetTexture::Settings::Antialiasing::MSAA_0, globalContext->windowSize, "depth/stencil"}
-			});*/
+			});
 
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
-			//stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 		}
 		_viewportDependentData->screenSwapTask = _viewportDependentData->screen->CreateTaskToSwapBuffer();
 
-		/*_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
+		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
 			globalContext,
 			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
 			_viewportIndependentData->cameraNode,
@@ -121,9 +121,9 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
-		}*/
+		}
 
-		/*auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
+		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
@@ -169,7 +169,7 @@ namespace Sample::Boxes
 		}
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();*/
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 	}
 
@@ -177,7 +177,7 @@ namespace Sample::Boxes
 	{
 		UserApp::OnUpdate(dt);
 
-		//_viewportIndependentData->cameraMovement->Update(dt);
+		_viewportIndependentData->cameraMovement->Update(dt);
 	}
 
 	void App::OnRender()
@@ -188,8 +188,8 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			//stream->Schedule(_viewportDependentData->updateCameraTask);
-			//stream->Schedule(_viewportDependentData->renderJobExecutionTask);
+			stream->Schedule(_viewportDependentData->updateCameraTask);
+			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenSwapTask);
 		}
 	}
