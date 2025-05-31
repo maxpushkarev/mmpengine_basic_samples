@@ -28,7 +28,7 @@ namespace Sample::Boxes
 			globalContext, std::filesystem::path("Pixel_Test.json")
 		);
 
-		/*auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
+		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
 		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::None;
 
@@ -61,7 +61,7 @@ namespace Sample::Boxes
 			globalContext,
 			GetInput().get(),
 			_viewportIndependentData->cameraNode
-		);*/
+		);
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -69,13 +69,13 @@ namespace Sample::Boxes
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
-			//stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
-			//stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
 		}
 
 		{
 			const auto executor = stream->CreateExecutor();
-			//stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
+			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
 		}
 	}
 
