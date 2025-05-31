@@ -122,9 +122,9 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
-		}
+		}*/
 
-		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
+		/*auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
@@ -167,10 +167,10 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
-		}
+		}*/
 
-		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();*/
+		//_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
+		//_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 	}
 
