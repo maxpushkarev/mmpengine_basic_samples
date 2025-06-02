@@ -125,7 +125,7 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
 		}
 
-		/*auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
+		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
@@ -158,20 +158,20 @@ namespace Sample::Boxes
 			globalContext,
 			_viewportDependentData->camera,
 			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
-				MMPEngine::Core::Camera::DrawCallsJob::Item{
+				/*MMPEngine::Core::Camera::DrawCallsJob::Item{
 					_viewportIndependentData->meshRenderer,
 					material
-				}
+				}*/
 			}
 		);
 
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
-		}*/
+		}
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		//_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 	}
 
@@ -191,7 +191,7 @@ namespace Sample::Boxes
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screenStartFrameTask);
 			stream->Schedule(_viewportDependentData->updateCameraTask);
-			//stream->Schedule(_viewportDependentData->renderJobExecutionTask);
+			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenPresentTask);
 		}
 	}
