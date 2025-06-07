@@ -158,10 +158,10 @@ namespace Sample::Boxes
 			globalContext,
 			_viewportDependentData->camera,
 			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
-				/*MMPEngine::Core::Camera::DrawCallsJob::Item{
+				MMPEngine::Core::Camera::DrawCallsJob::Item{
 					_viewportIndependentData->meshRenderer,
 					material
-				}*/
+				}
 			}
 		);
 
