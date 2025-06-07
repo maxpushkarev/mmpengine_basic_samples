@@ -30,7 +30,7 @@ namespace Sample::Boxes
 
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
-		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::None;
+		matSettings.cullMode = MMPEngine::Core::RenderingMaterial::Settings::CullMode::Back;
 
 		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
@@ -39,8 +39,8 @@ namespace Sample::Boxes
 
 		const auto meshRendererNode = std::make_shared<MMPEngine::Core::Node>();
 
-		meshRendererNode->localTransform.position.x += 1.0f;
-		meshRendererNode->localTransform.position.y += 1.0f;
+		meshRendererNode->localTransform.position.x += 2.5f;
+		meshRendererNode->localTransform.position.y += 1.5f;
 		meshRendererNode->localTransform.position.z += 1.0f;
 
 		_viewportIndependentData->meshRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
