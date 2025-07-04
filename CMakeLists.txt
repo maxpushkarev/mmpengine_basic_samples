@@ -63,8 +63,12 @@ function(addSample appName)
 		endif()
 		
 	elseif(APPLE)
-		get_property(macosx_macro_tmp GLOBAL PROPERTY MMPENGINE_MACOSX_MACRO)
-		target_compile_definitions(${appName} PRIVATE ${macosx_macro_tmp}=1)
+		get_property(metal_macro_tmp GLOBAL PROPERTY MMPENGINE_METAL_MACRO)
+		target_compile_definitions(${appName} PRIVATE ${metal_macro_tmp}=1)
+		if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+			get_property(macosx_macro_tmp GLOBAL PROPERTY MMPENGINE_MACOSX_MACRO)
+			target_compile_definitions(${appName} PRIVATE ${macosx_macro_tmp}=1)
+		endif()
 	ENDIF()
 
 	#shdder configs
