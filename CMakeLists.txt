@@ -26,33 +26,15 @@ function(addSample appName)
 	
 	mmpengine_add_source_files_to_proj(${appName} src/samples/${appName})
 
-	get_property(core_name_tmp GLOBAL PROPERTY MMPENGINE_CORE_NAME)
-	get_property(frontend_name_tmp GLOBAL PROPERTY MMPENGINE_FRONTEND_NAME)
-	get_property(feature_name_tmp GLOBAL PROPERTY MMPENGINE_FEATURE_NAME)
-
 	target_include_directories(${appName} PRIVATE ${PROJECT_SOURCE_DIR}/libs/mmpengine/src ${PROJECT_SOURCE_DIR}/src/samples)
-	target_link_libraries(${appName} PRIVATE ${core_name_tmp} ${frontend_name_tmp} ${feature_name_tmp})
 	target_compile_features(${appName}  PRIVATE cxx_std_17)
 	SET(RuntimeOutputDir ${CMAKE_SOURCE_DIR}/bin/${appName})
 	set_property(TARGET ${appName} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${RuntimeOutputDir})
 
-	IF (NOT APPLE)
-		IF(${Vulkan_FOUND})
-			get_property(vulkan_macro_tmp GLOBAL PROPERTY MMPENGINE_VULKAN_MACRO)
-			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
-			target_compile_definitions(${appName} PRIVATE ${vulkan_macro_tmp}=1)
-			
-			target_link_libraries(${appName} PRIVATE ${Vulkan_LIBRARIES})
-			target_include_directories(${appName} PRIVATE ${Vulkan_INCLUDE_DIRS})
-		ENDIF()
-	ENDIF()
+	mmpengine_add_dependencies_and_macro(${appName})
+
 
 	IF (WIN32)
-		get_property(win_macro_tmp GLOBAL PROPERTY MMPENGINE_WIN_MACRO)
-		get_property(dx12_macro_tmp GLOBAL PROPERTY MMPENGINE_DX12_MACRO)
-		target_compile_definitions(${appName} PRIVATE ${win_macro_tmp}=1)
-		target_compile_definitions(${appName} PRIVATE ${dx12_macro_tmp}=1)
-		
 		set_target_properties(${appName} PROPERTIES WIN32_EXECUTABLE TRUE)
 		
 		if (CMAKE_GENERATOR MATCHES "Visual Studio")
@@ -62,13 +44,6 @@ function(addSample appName)
 			#TODO: support
 		endif()
 		
-	elseif(APPLE)
-		get_property(metal_macro_tmp GLOBAL PROPERTY MMPENGINE_METAL_MACRO)
-		target_compile_definitions(${appName} PRIVATE ${metal_macro_tmp}=1)
-		if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-			get_property(macosx_macro_tmp GLOBAL PROPERTY MMPENGINE_MACOSX_MACRO)
-			target_compile_definitions(${appName} PRIVATE ${macosx_macro_tmp}=1)
-		endif()
 	ENDIF()
 
 	#shdder configs
