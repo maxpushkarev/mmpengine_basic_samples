@@ -33,7 +33,8 @@ inline std::int32_t MainTemplate::SharedMain(MMPEngine::Core::BackendType backen
 	}
 	else
 	{
-#if (defined(DEBUG) || defined(_DEBUG)) 
+        
+#if (defined(DEBUG) || defined(_DEBUG))
 		appContextSettings.isDebug = true;
 #else
 		appContextSettings.isDebug = false;
