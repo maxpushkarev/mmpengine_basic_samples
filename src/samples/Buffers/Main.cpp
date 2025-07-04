@@ -9,3 +9,10 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 	return MainTemplate::SharedMain<Sample::Buffers::App>(MMPEngine::Core::BackendType::Vulkan, "Buffers");
 }
 #endif
+
+#ifdef MMPENGINE_MAC
+std::int32_t main()
+{
+    return 0;
+}
+#endif
