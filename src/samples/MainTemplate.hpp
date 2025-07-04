@@ -45,6 +45,10 @@ inline std::int32_t MainTemplate::SharedMain(MMPEngine::Core::BackendType backen
 #ifdef MMPENGINE_WIN
 	const auto logger = std::make_shared<MMPEngine::Feature::Win::OutputLogger>(userAppName + " logger");
 #endif
+    
+#ifdef MMPENGINE_MAC
+    const auto logger = std::make_shared<MMPEngine::Feature::Mac::OutputLogger>(userAppName + " logger");
+#endif
 	auto userApp = std::make_unique<TUserApp>(logger);
 	auto rootApp = MMPEngine::Feature::App::BuildRootApp(appContextSettings, std::move(userApp), nullptr, logger);
 
