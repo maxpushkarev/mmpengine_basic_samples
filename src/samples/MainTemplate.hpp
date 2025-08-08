@@ -59,7 +59,6 @@ inline std::int32_t MainTemplate::SharedMain(MMPEngine::Core::BackendType backen
 
 	const auto appContainer = std::make_unique<MMPEngine::Feature::Shared::AppContainer>(std::move(appContainerSettings), std::move(rootApp));
 	return appContainer->Run();
-	return 0;
 }
 
 #ifdef MMPENGINE_WIN
