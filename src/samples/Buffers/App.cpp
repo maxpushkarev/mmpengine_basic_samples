@@ -71,7 +71,7 @@ namespace Sample::Buffers
 		}
 
 
-		//assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
+		assert(std::equal(uploadVec.cbegin(), uploadVec.cend(), readBackVec.cbegin()));
 	}
 
 	void App::Test_IndexBuffer()
