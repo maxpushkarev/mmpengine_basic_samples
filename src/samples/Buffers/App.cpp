@@ -13,10 +13,10 @@ namespace Sample::Buffers
 		UserApp::Initialize();
 
 		Test_Upload_To_Resident_To_ReadBack();
-		/*Test_UniformBufferTo_ReadBack();
+		Test_UniformBufferTo_ReadBack();
 		Test_Structured_Buffers();
-		Test_IndexBuffer();
-		Test_VertexBuffer();*/
+		//Test_IndexBuffer();
+		//Test_VertexBuffer();
 	}
 
 	void App::Test_Upload_To_Resident_To_ReadBack()
