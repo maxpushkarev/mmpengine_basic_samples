@@ -29,6 +29,7 @@ function(addSample appName)
 	target_include_directories(${appName} PRIVATE ${PROJECT_SOURCE_DIR}/libs/mmpengine/src ${PROJECT_SOURCE_DIR}/src/samples)
 	target_compile_features(${appName}  PRIVATE cxx_std_17)
 	SET(RuntimeOutputDir ${CMAKE_SOURCE_DIR}/bin/${appName})
+	SET(RuntimeOutputDirWithConfig ${RuntimeOutputDir}/${CMAKE_CFG_INTDIR})
 	set_property(TARGET ${appName} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${RuntimeOutputDir})
 
 	mmpengine_add_dependencies_and_macro(${appName})
@@ -38,8 +39,7 @@ function(addSample appName)
 		set_target_properties(${appName} PROPERTIES WIN32_EXECUTABLE TRUE)
 		
 		if (CMAKE_GENERATOR MATCHES "Visual Studio")
-			SET(VSWorkingDir ${RuntimeOutputDir}/${CMAKE_CFG_INTDIR})
-			set_property(TARGET ${appName} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${VSWorkingDir})
+			set_property(TARGET ${appName} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${RuntimeOutputDirWithConfig})
 		else()
 			#TODO: support
 		endif()
@@ -110,7 +110,7 @@ function(addSample appName)
 				
 				if (CMAKE_GENERATOR MATCHES "Visual Studio")
 					get_filename_component(filename ${shader_file} NAME)
-					set(output_spirv "${VSWorkingDir}/${filename}.spv")
+					set(output_spirv "${RuntimeOutputDirWithConfig}/${filename}.spv")
 					add_custom_command(
 						TARGET ${appName} POST_BUILD
 						COMMAND glslc -Ishaders/includes ${shader_file} -o ${output_spirv}
@@ -123,6 +123,38 @@ function(addSample appName)
 						
 			endforeach( shader_file ${shaderFiles} )
 		ENDIF()
+	ELSE()
+		set(shader_files_folder src/samples/${appName}/shaders)
+		set(output_metallib "${RuntimeOutputDirWithConfig}/${appName}.metallib")
+		
+		file (GLOB shaderFiles 
+			${shader_files_folder}/*.metal
+		)
+		foreach( shader_file ${shaderFiles})
+			target_sources(${appName} PRIVATE ${shader_file})
+			set_source_files_properties(MyShader.metal PROPERTIES
+    				LANGUAGE Metal
+    				COMPILE_FLAGS "-std=metal3.0"
+			)
+			get_filename_component(filename ${shader_file} NAME_WE)
+			set(output_air_shader "${RuntimeOutputDirWithConfig}/${filename}.air")
+			
+			add_custom_command(
+				TARGET ${appName} POST_BUILD
+				COMMAND xcrun -sdk macosx metal -std=metal3.0 -c ${shader_file} -o ${output_air_shader}
+				COMMENT "Compiling Metal shader ${shader_file} to ${output_air_shader};"
+			)
+			SET(output_airs ${output_airs} ${output_air_shader})
+		endforeach( shader_file ${shaderFiles} )
+
+		if(NOT ${output_airs} STREQUAL "")
+			add_custom_command(
+				TARGET ${appName} POST_BUILD
+				
+				COMMAND xcrun -sdk macosx metallib "${output_airs}" -o "${output_metallib}"
+				COMMENT "Pack ${output_airs} to lib ${output_metallib};"
+			)
+		endif()
 	ENDIF()
 	
 endfunction()
