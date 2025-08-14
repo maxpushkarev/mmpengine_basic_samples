@@ -53,17 +53,18 @@ function(addSample appName)
 	
 	ENDIF()
 
-	#shdder configs
+	#shader configs
 	file (GLOB shaderConfigurationFiles src/samples/${appName}/shaders/*.json)
 	
 	foreach( shader_cfg ${shaderConfigurationFiles})
 		target_sources(${appName} PRIVATE ${shader_cfg})
 		
-		if (CMAKE_GENERATOR MATCHES "Visual Studio")
-			set_source_files_properties( ${shader_cfg} PROPERTIES VS_COPY_TO_OUT_DIR "Always")
-		else()
-			#TODO: support
-		endif()
+		get_filename_component(shader_cfg_filename ${shader_cfg} NAME)
+		add_custom_command(TARGET ${appName} POST_BUILD
+    			COMMAND ${CMAKE_COMMAND} -E copy
+            		${shader_cfg}
+            		${RuntimeOutputDirWithConfig}/${shader_cfg_filename}
+		)
 		
 	endforeach( shader_cfg ${shaderConfigurationFiles} )
 	
