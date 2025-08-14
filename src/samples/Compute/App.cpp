@@ -15,8 +15,8 @@ namespace Sample::Compute
 	{
 		UserApp::Initialize();
 
-		Test_SetValue();
-		Test_Filter();
+		//Test_SetValue();
+		//Test_Filter();
 	}
 
 	void App::Test_SetValue()
@@ -103,7 +103,8 @@ namespace Sample::Compute
 			stream->Schedule(uniform2->CreateWriteAsyncTask({10}));
 
 			const auto computeExecutionTask = computeJob->CreateExecutionTask();
-			computeExecutionTask->GetTaskContext()->dimensions = {1, 1, 1};
+			computeExecutionTask->GetTaskContext()->groups = {1, 1, 1};
+            computeExecutionTask->GetTaskContext()->threadsPerGroup = {128, 1, 1};
 
 			stream->Schedule(computeExecutionTask);
 			stream->Schedule(uaBuffer->CopyToBuffer(readBackBuffer));
@@ -304,11 +305,13 @@ namespace Sample::Compute
 			stream->Schedule(uploadBufferNegative->CreateWriteTask(inputVec.data(), byteLength, 0));
 
 			const auto computePositiveExecutionTask = computeJobPositive->CreateExecutionTask();
-			computePositiveExecutionTask->GetTaskContext()->dimensions = { 1, 1, 1 };
+			computePositiveExecutionTask->GetTaskContext()->groups = { 1, 1, 1 };
+            computePositiveExecutionTask->GetTaskContext()->threadsPerGroup = { 128, 1, 1 };
 			stream->Schedule(computePositiveExecutionTask);
 
 			const auto computeNegativeExecutionTask = computeJobNegative->CreateExecutionTask();
-			computeNegativeExecutionTask->GetTaskContext()->dimensions = { 1, 1, 1 };
+			computeNegativeExecutionTask->GetTaskContext()->groups = { 1, 1, 1 };
+            computeNegativeExecutionTask->GetTaskContext()->threadsPerGroup = { 128, 1, 1 };
 			stream->Schedule(computeNegativeExecutionTask);
 
 
