@@ -25,8 +25,8 @@ namespace Sample::Boxes
 		public:
 			std::tuple<
 				MMPEngine::Core::MeshMaterial::Settings,
-				std::shared_ptr<MMPEngine::Core::VertexShader>,
-				std::shared_ptr<MMPEngine::Core::PixelShader>
+				std::shared_ptr<MMPEngine::Core::Shader>,
+				std::shared_ptr<MMPEngine::Core::Shader>
 			> materialData;
 			std::shared_ptr<MMPEngine::Core::Mesh> mesh;
 			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> meshRenderer;
