@@ -1,5 +1,6 @@
 #pragma once
 #include <Feature/App.hpp>
+#include <Frontend/Shader.hpp>
 
 namespace Sample::Compute
 {
@@ -10,6 +11,7 @@ namespace Sample::Compute
 		void Initialize() override;
 	private:
 		static constexpr std::size_t _vecSize = 128;
+
 		struct TestUniform final
 		{
 			std::uint32_t value;
@@ -17,5 +19,7 @@ namespace Sample::Compute
 
 		void Test_SetValue();
 		void Test_Filter();
+	private:
+		std::shared_ptr<MMPEngine::Frontend::ShaderPack> _shaderPack;
 	};
 }

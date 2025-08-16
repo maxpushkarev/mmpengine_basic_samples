@@ -15,8 +15,16 @@ namespace Sample::Compute
 	{
 		UserApp::Initialize();
 
-		//Test_SetValue();
-		//Test_Filter();
+		_shaderPack = std::make_shared<MMPEngine::Frontend::ShaderPack>(GetContext(), std::filesystem::path("Compute.json"));
+
+		{
+			const auto stream = GetDefaultStream();
+			const auto executor = stream->CreateExecutor();
+			stream->Schedule(_shaderPack->CreateInitializationTask());
+		}
+
+		Test_SetValue();
+		Test_Filter();
 	}
 
 	void App::Test_SetValue()
@@ -24,7 +32,7 @@ namespace Sample::Compute
 		const auto uniform1 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestUniform>>(GetContext());
 		const auto uniform2 = std::make_shared<MMPEngine::Frontend::UniformBuffer<TestUniform>>(GetContext());
 
-		const auto computeShader = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(GetContext(), std::filesystem::path("Compute_SetValue.json"));
+		const auto computeShader = _shaderPack->Unpack("SetValue");
 		const auto stream = GetDefaultStream();
 
 		std::vector<std::uint32_t> expectedVec(_vecSize, 0);
@@ -119,8 +127,8 @@ namespace Sample::Compute
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
-		const auto computeShaderPositive = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(globalContext, std::filesystem::path("Compute_Filter_Positive.json"));
-		const auto computeShaderNegative = MMPEngine::Frontend::Shader::LoadFromFile<MMPEngine::Core::ComputeShader>(globalContext, std::filesystem::path("Compute_Filter_Negative.json"));
+		const auto computeShaderPositive = _shaderPack->Unpack("FilterPositive");
+		const auto computeShaderNegative = _shaderPack->Unpack("FilterNegative");
 		
 
 		std::vector<std::int32_t> inputVec(_vecSize, 0);

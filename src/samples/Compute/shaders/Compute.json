@@ -1,0 +1,48 @@
+{
+  "shaderPack": {
+    "Dx12": {
+		"byteCodeFiles": [
+			{
+				"id" : "FilterNegative",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_Filter_Negative.cso"
+			},
+			{
+				"id" : "FilterPositive",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_Filter_Positive.cso"
+			},
+			{
+				"id" : "SetValue",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_SetValue.cso"
+			}
+		]
+    },
+    "Vulkan": {
+		"byteCodeFiles": [
+			{
+				"id" : "FilterNegative",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_Filter_Negative.comp.spv"
+			},
+			{
+				"id" : "FilterPositive",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_Filter_Positive.comp.spv"
+			},
+			{
+				"id" : "SetValue",
+				"type" : "Compute",
+				"entryPoint" : "main",
+				"path": "./Compute_SetValue.comp.spv"
+			}
+		]
+    }
+  }
+}
