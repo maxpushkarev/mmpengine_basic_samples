@@ -7,6 +7,7 @@
 #include <Frontend/Texture.hpp>
 #include <Frontend/Camera.hpp>
 #include <Frontend/DrawCall.hpp>
+#include <Frontend/Shader.hpp>
 
 namespace Sample::Boxes
 {
@@ -23,6 +24,7 @@ namespace Sample::Boxes
 		class ViewportIndependentData final
 		{
 		public:
+			std::shared_ptr<MMPEngine::Frontend::ShaderPack> shaderPack;
 			std::tuple<
 				MMPEngine::Core::MeshMaterial::Settings,
 				std::shared_ptr<MMPEngine::Core::Shader>,

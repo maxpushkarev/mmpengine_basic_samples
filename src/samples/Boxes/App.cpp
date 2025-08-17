@@ -19,10 +19,10 @@ namespace Sample::Boxes
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
-		const auto shaderPack = std::make_shared<MMPEngine::Frontend::ShaderPack>(globalContext, std::filesystem::path("Boxes.json"));
+		_viewportIndependentData->shaderPack = std::make_shared<MMPEngine::Frontend::ShaderPack>(globalContext, std::filesystem::path("Boxes.json"));
 
-		const auto vs = shaderPack->Unpack("VertexTest");
-		const auto ps = shaderPack->Unpack("PixelTest");
+		const auto vs = _viewportIndependentData->shaderPack->Unpack("VertexTest");
+		const auto ps = _viewportIndependentData->shaderPack->Unpack("PixelTest");
 
 		auto matSettings = MMPEngine::Core::RenderingMaterial::Settings{};
 		matSettings.fillMode = MMPEngine::Core::RenderingMaterial::Settings::FillMode::WireFrame;
@@ -62,7 +62,7 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 
-			stream->Schedule(shaderPack->CreateInitializationTask());
+			stream->Schedule(_viewportIndependentData->shaderPack->CreateInitializationTask());
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
