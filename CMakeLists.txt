@@ -148,11 +148,11 @@ function(addSample appName)
 			SET(output_airs ${output_airs} ${output_air_shader})
 		endforeach( shader_file ${shaderFiles} )
 
-		if(NOT ${output_airs} STREQUAL "")
+		if(NOT "${output_airs}" STREQUAL "")
 			add_custom_command(
 				TARGET ${appName} POST_BUILD
 				
-				COMMAND xcrun -sdk macosx metallib "${output_airs}" -o "${output_metallib}"
+				COMMAND xcrun -sdk macosx metallib ${output_airs} -o "${output_metallib}"
 				COMMENT "Pack ${output_airs} to lib ${output_metallib};"
 			)
 		endif()

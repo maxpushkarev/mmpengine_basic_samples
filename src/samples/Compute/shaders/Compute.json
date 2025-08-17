@@ -48,12 +48,21 @@
       "lib": {
         "path": "./Compute.metallib",
         "shaders": [
-          {
-            "id": "SetValue",
-            "type": "Compute",
-            "entryPoint": "main",
-            "path": "./Compute_SetValue.air"
-          }
+            {
+              "id": "FilterNegative",
+              "type": "Compute",
+              "entryPoint": "FilterNegative"
+            },
+            {
+              "id": "FilterPositive",
+              "type": "Compute",
+              "entryPoint": "FilterPositive"
+            },
+            {
+                "id": "SetValue",
+                "type": "Compute",
+                "entryPoint": "SetValue"
+            }
         ]
       }
     }
