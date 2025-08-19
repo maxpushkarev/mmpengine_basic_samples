@@ -6,13 +6,13 @@
 				"id" : "VertexTest",
 				"type" : "Vertex",
 				"entryPoint" : "main",
-				"path": "./Vertex_Test.cso"
+				"path": "Vertex_Test.cso"
 			},
 			{
 				"id" : "PixelTest",
 				"type" : "Pixel",
 				"entryPoint" : "main",
-				"path": "./Pixel_Test.cso"
+				"path": "Pixel_Test.cso"
 			}
 		]
     },
@@ -22,13 +22,13 @@
 				"id" : "VertexTest",
 				"type" : "Vertex",
 				"entryPoint" : "main",
-				"path": "./Vertex_Test.vert.spv"
+				"path": "Vertex_Test.vert.spv"
 			},
 			{
 				"id" : "PixelTest",
 				"type" : "Pixel",
 				"entryPoint" : "main",
-				"path": "./Pixel_Test.frag.spv"
+				"path": "Pixel_Test.frag.spv"
 			}			
 		]
     }
