@@ -119,7 +119,7 @@ namespace Sample::Compute
 			stream->Schedule(readBackBuffer->CreateReadTask(readVec.data(), byteLength, 0));
 		}
 
-		//assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));
+		assert(std::equal(expectedVec.cbegin(), expectedVec.cend(), readVec.cbegin()));
 	}
 
 	void App::Test_Filter()
