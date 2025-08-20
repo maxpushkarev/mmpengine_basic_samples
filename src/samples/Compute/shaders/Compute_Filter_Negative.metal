@@ -1,22 +1,18 @@
 #include <metal_stdlib>
 using namespace metal;
 
-struct GlobalUniforms0
-{
-    uint multiplier;
-};
-
-struct GlobalUniforms1
-{
-    uint addition;
-};
-
 kernel void FilterNegative(
-    device uint*                 outputData  [[ buffer(0) ]],
-    constant GlobalUniforms0&    ubo0        [[ buffer(1) ]],
-    constant GlobalUniforms1&    ubo1        [[ buffer(2) ]],
-    uint3                        gid         [[ thread_position_in_grid ]]
+    device const int*     inputData  [[ buffer(0) ]],
+    device int*    outputData        [[ buffer(1) ]],
+    device atomic_uint& outputCounter        [[ buffer(2) ]],
+    uint3  gid   [[ thread_position_in_grid ]]
 )
 {
-    outputData[gid.x] = gid.x * ubo0.multiplier + ubo1.addition;
+    const int inputValue = inputData[gid.x];
+    if (inputValue < 0)
+    {
+        uint i = atomic_fetch_add_explicit(&outputCounter, 1, memory_order_relaxed);
+        outputData[i] = inputValue;
+    }
 }
+

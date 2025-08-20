@@ -24,7 +24,7 @@ namespace Sample::Compute
 		}
 
 		Test_SetValue();
-		//Test_Filter();
+		Test_Filter();
 	}
 
 	void App::Test_SetValue()
