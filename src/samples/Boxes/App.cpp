@@ -14,7 +14,7 @@ namespace Sample::Boxes
 	{
 		MMPEngine::Feature::UserApp::Initialize();
 
-		_viewportIndependentData = std::make_unique<ViewportIndependentData>();
+		/*_viewportIndependentData = std::make_unique<ViewportIndependentData>();
 
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
@@ -73,14 +73,14 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
-		}
+		}*/
 	}
 
 	void App::OnNativeWindowUpdated()
 	{
 		UserApp::OnNativeWindowUpdated();
 
-		_viewportDependentData = nullptr;
+	/*	_viewportDependentData = nullptr;
 		_viewportDependentData = std::make_unique<ViewportDependentData>();
 
 		const auto stream = GetDefaultStream();
@@ -168,21 +168,21 @@ namespace Sample::Boxes
 		}
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();*/
 
 	}
 
 	void App::OnUpdate(std::float_t dt)
 	{
 		UserApp::OnUpdate(dt);
-		_viewportIndependentData->cameraMovement->Update(dt);
+		//_viewportIndependentData->cameraMovement->Update(dt);
 	}
 
 	void App::OnRender()
 	{
 		UserApp::OnRender();
 
-		const auto stream = GetDefaultStream();
+		/*const auto stream = GetDefaultStream();
 
 		{
 			const auto executor = stream->CreateExecutor();
@@ -190,6 +190,6 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->updateCameraTask);
 			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenPresentTask);
-		}
+		}*/
 	}
 }

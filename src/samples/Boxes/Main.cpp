@@ -13,6 +13,6 @@ std::int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,
 #ifdef MMPENGINE_MAC
 std::int32_t main()
 {
-    return 0;
+    return MainTemplate::SharedMain<Sample::Boxes::App>(MMPEngine::Core::BackendType::Metal, "Boxes");
 }
 #endif
