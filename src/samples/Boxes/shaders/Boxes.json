@@ -31,6 +31,23 @@
 				"path": "Pixel_Test.frag.spv"
 			}			
 		]
+    },
+    "Metal": {
+      "lib": {
+        "path": "./Boxes.metallib",
+        "shaders": [
+            {
+              "id": "VertexTest",
+              "type": "Vertex",
+              "entryPoint": "VertexTest"
+            },
+            {
+              "id": "PixelTest",
+              "type": "Pixel",
+              "entryPoint": "PixelTest"
+            }
+        ]
+      }
     }
   }
 }
