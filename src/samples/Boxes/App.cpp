@@ -14,7 +14,7 @@ namespace Sample::Boxes
 	{
 		MMPEngine::Feature::UserApp::Initialize();
 
-		/*_viewportIndependentData = std::make_unique<ViewportIndependentData>();
+		_viewportIndependentData = std::make_unique<ViewportIndependentData>();
 
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
@@ -73,22 +73,22 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
-		}*/
+		}
 	}
 
 	void App::OnNativeWindowUpdated()
 	{
 		UserApp::OnNativeWindowUpdated();
 
-	/*	_viewportDependentData = nullptr;
+		_viewportDependentData = nullptr;
 		_viewportDependentData = std::make_unique<ViewportDependentData>();
 
 		const auto stream = GetDefaultStream();
 		const auto globalContext = GetContext();
 
-		_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
+		/*_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
 			1, 2, true, MMPEngine::Core::Vector4Float {0.0f, 0.0f, 0.0125f, 0.0f }
-		});
+		});*/
 
 		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
 			globalContext, 
@@ -100,11 +100,11 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
+			//stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 		}
 
-		_viewportDependentData->screenStartFrameTask = _viewportDependentData->screen->CreateStartFrameTask();
+		/*_viewportDependentData->screenStartFrameTask = _viewportDependentData->screen->CreateStartFrameTask();
 		_viewportDependentData->screenPresentTask = _viewportDependentData->screen->CreatePresentationTask();
 
 		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
