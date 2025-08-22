@@ -55,7 +55,7 @@ inline std::int32_t MainTemplate::SharedMain(MMPEngine::Core::BackendType backen
 
 	MMPEngine::Feature::Shared::AppContainer::Settings appContainerSettings {};
 	appContainerSettings.base.targetFps = 360;
-	appContainerSettings.base = { userAppName };
+	appContainerSettings.base.windowCaption = userAppName;
 
 	const auto appContainer = std::make_unique<MMPEngine::Feature::Shared::AppContainer>(std::move(appContainerSettings), std::move(rootApp));
 	return appContainer->Run();
@@ -89,7 +89,7 @@ inline std::int32_t MainTemplate::WinMain(HINSTANCE hInstance, MMPEngine::Core::
 
 	MMPEngine::Feature::Win::AppContainer::Settings appContainerSettings {};
 	appContainerSettings.base.targetFps = 360;
-	appContainerSettings.base = { userAppName };
+	appContainerSettings.base.windowCaption = userAppName;
 	appContainerSettings.platform = { hInstance };
 
 	const auto appContainer = std::make_unique<MMPEngine::Feature::Win::AppContainer>(std::move(appContainerSettings), std::move(rootApp));
