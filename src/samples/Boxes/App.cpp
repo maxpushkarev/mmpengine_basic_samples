@@ -86,9 +86,9 @@ namespace Sample::Boxes
 		const auto stream = GetDefaultStream();
 		const auto globalContext = GetContext();
 
-		/*_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
+		_viewportDependentData->screen = std::make_shared<MMPEngine::Frontend::Screen>(globalContext, MMPEngine::Core::Screen::Settings {
 			1, 2, true, MMPEngine::Core::Vector4Float {0.0f, 0.0f, 0.0125f, 0.0f }
-		});*/
+		});
 
 		_viewportDependentData->depthStencilTexture = std::make_shared<MMPEngine::Frontend::DepthStencilTargetTexture>(
 			globalContext, 
@@ -100,11 +100,11 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			//stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
+			stream->Schedule(_viewportDependentData->screen->CreateInitializationTask());
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 		}
 
-		/*_viewportDependentData->screenStartFrameTask = _viewportDependentData->screen->CreateStartFrameTask();
+		_viewportDependentData->screenStartFrameTask = _viewportDependentData->screen->CreateStartFrameTask();
 		_viewportDependentData->screenPresentTask = _viewportDependentData->screen->CreatePresentationTask();
 
 		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
@@ -151,7 +151,7 @@ namespace Sample::Boxes
 		);
 
 
-		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
+		/*_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
 			globalContext,
 			_viewportDependentData->camera,
 			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
@@ -165,31 +165,31 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
-		}
+		}*/
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();*/
+		//_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 	}
 
 	void App::OnUpdate(std::float_t dt)
 	{
 		UserApp::OnUpdate(dt);
-		//_viewportIndependentData->cameraMovement->Update(dt);
+		_viewportIndependentData->cameraMovement->Update(dt);
 	}
 
 	void App::OnRender()
 	{
 		UserApp::OnRender();
 
-		/*const auto stream = GetDefaultStream();
+		const auto stream = GetDefaultStream();
 
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screenStartFrameTask);
 			stream->Schedule(_viewportDependentData->updateCameraTask);
-			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
+			//stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenPresentTask);
-		}*/
+		}
 	}
 }
