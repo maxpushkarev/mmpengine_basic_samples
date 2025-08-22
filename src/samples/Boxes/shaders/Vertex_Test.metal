@@ -1,22 +1,17 @@
-#include <metal_stdlib>
-using namespace metal;
+#include "../../../../libs/mmpengine/src/Backend/Metal/Shader.h"
+#include "../TestShader.h"
 
-struct GlobalUniforms0
-{
-    uint multiplier;
-};
-
-struct GlobalUniforms1
-{
-    uint addition;
-};
-
-kernel void VertexTest(
-    device uint*                 outputData  [[ buffer(0) ]],
-    constant GlobalUniforms0&    ubo0        [[ buffer(1) ]],
-    constant GlobalUniforms1&    ubo1        [[ buffer(2) ]],
-    uint3                        gid         [[ thread_position_in_grid ]]
+vertex VertexOut VertexTest(
+    VertexIn in                                     [[stage_in]],
+    constant CameraData&          cameraData        [[ buffer(0) ]],
+    constant MeshRendererData&    objectData        [[ buffer(1) ]]
 )
 {
-    outputData[gid.x] = gid.x * ubo0.multiplier + ubo1.addition;
+    VertexOut out;
+    
+    float4 worldPos = float4(in.position, 1.0f) *  objectData.worldMat;
+    float4 viewPos = worldPos * cameraData.viewMat;
+    out.position = viewPos * cameraData.projMat;
+    
+    return out;
 }

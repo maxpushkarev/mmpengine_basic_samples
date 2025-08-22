@@ -39,4 +39,16 @@ layout(std140, set = 1, binding = 0, column_major) uniform ObjectData {
 
 #endif
 
+#if MMPENGINE_MSL
+
+struct VertexIn {
+    float3 position [[attribute(0)]];
+};
+
+struct VertexOut {
+    float4 position [[position]];
+};
+
+#endif
+
 #endif
