@@ -29,11 +29,11 @@ struct VertexOut
 
 #if MMPENGINE_GLSL
 
-layout(std140, set = 0, binding = 0, row_major) uniform SceneData {
+layout(std140, set = 0, binding = 0, column_major) uniform SceneData {
 	CameraData cameraData;
 } sceneData;
 
-layout(std140, set = 1, binding = 0, row_major) uniform ObjectData {
+layout(std140, set = 1, binding = 0, column_major) uniform ObjectData {
 	MeshRendererData meshRendererData;
 } objectData;
 

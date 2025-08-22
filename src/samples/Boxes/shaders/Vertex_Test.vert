@@ -5,7 +5,7 @@
 layout(location = 0) in vec3 inPosition;
 
 void main() {
-	vec4 worldPos = objectData.meshRendererData.worldMat * vec4(inPosition, 1.0f);
-	vec4 viewPos = sceneData.cameraData.viewMat * worldPos;
-	gl_Position = sceneData.cameraData.projMat * viewPos;
+	vec4 worldPos = vec4(inPosition, 1.0f)* objectData.meshRendererData.worldMat;
+	vec4 viewPos = worldPos * sceneData.cameraData.viewMat;
+	gl_Position = viewPos * sceneData.cameraData.projMat;
 }
