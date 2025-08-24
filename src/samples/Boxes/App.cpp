@@ -186,10 +186,10 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			//stream->Schedule(_viewportDependentData->screenStartFrameTask);
+			stream->Schedule(_viewportDependentData->screenStartFrameTask);
 			stream->Schedule(_viewportDependentData->updateCameraTask);
 			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
-			//stream->Schedule(_viewportDependentData->screenPresentTask);
+			stream->Schedule(_viewportDependentData->screenPresentTask);
 		}
 	}
 }
