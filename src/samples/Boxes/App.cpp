@@ -151,7 +151,7 @@ namespace Sample::Boxes
 		);
 
 
-		/*_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
+		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
 			globalContext,
 			_viewportDependentData->camera,
 			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
@@ -165,10 +165,10 @@ namespace Sample::Boxes
 		{
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
-		}*/
+		}
 
 		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		//_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
 
 	}
 
@@ -188,7 +188,7 @@ namespace Sample::Boxes
 			const auto executor = stream->CreateExecutor();
 			stream->Schedule(_viewportDependentData->screenStartFrameTask);
 			stream->Schedule(_viewportDependentData->updateCameraTask);
-			//stream->Schedule(_viewportDependentData->renderJobExecutionTask);
+			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
 			stream->Schedule(_viewportDependentData->screenPresentTask);
 		}
 	}
