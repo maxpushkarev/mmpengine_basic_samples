@@ -3,8 +3,8 @@
 
 vertex VertexOut VertexTest(
     VertexIn in                                     [[stage_in]],
-    constant CameraData&          cameraData        [[ buffer(0) ]],
-    constant MeshRendererData&    objectData        [[ buffer(1) ]]
+    constant CameraData&          cameraData        [[ buffer(1) ]],
+    constant MeshRendererData&    objectData        [[ buffer(2) ]]
 )
 {
     VertexOut out;
