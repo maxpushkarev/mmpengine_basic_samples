@@ -40,13 +40,10 @@ namespace Sample::Boxes
 		{
 		public:
 			std::shared_ptr<MMPEngine::Core::Camera> camera;
-			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Camera::UpdateDataTaskContext>> updateCameraTask;
 			std::shared_ptr<MMPEngine::Core::Screen> screen;
-			std::shared_ptr<MMPEngine::Core::BaseTask> screenStartFrameTask;
-			std::shared_ptr<MMPEngine::Core::BaseTask> screenPresentTask;
+			std::shared_ptr<MMPEngine::Core::ContextualTask<MMPEngine::Core::Screen::FrameTaskContext>> screenFrameTask;
 			std::shared_ptr<MMPEngine::Core::DepthStencilTargetTexture> depthStencilTexture;
 			std::shared_ptr<MMPEngine::Core::Camera::DrawCallsJob> renderJob;
-			std::shared_ptr<MMPEngine::Core::BaseTask> renderJobExecutionTask;
 		};
 
 		std::unique_ptr<ViewportIndependentData> _viewportIndependentData;

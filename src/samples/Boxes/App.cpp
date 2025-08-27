@@ -104,9 +104,6 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->depthStencilTexture->CreateInitializationTask());
 		}
 
-		_viewportDependentData->screenStartFrameTask = _viewportDependentData->screen->CreateStartFrameTask();
-		_viewportDependentData->screenPresentTask = _viewportDependentData->screen->CreatePresentationTask();
-
 		_viewportDependentData->camera = std::make_shared<MMPEngine::Frontend::PerspectiveCamera>(
 			globalContext,
 			MMPEngine::Core::PerspectiveCamera::Settings {{}, {}},
@@ -167,8 +164,17 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->renderJob->CreateInitializationTask());
 		}
 
-		_viewportDependentData->updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
-		_viewportDependentData->renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+		const auto updateCameraTask = _viewportDependentData->camera->CreateTaskToUpdateUniformData();
+		const auto renderJobExecutionTask = _viewportDependentData->renderJob->CreateExecutionTask();
+
+
+		_viewportDependentData->screenFrameTask = _viewportDependentData->screen->CreateFrameTask();
+		_viewportDependentData->screenFrameTask->GetTaskContext()->internalTask = std::make_shared<MMPEngine::Core::StaticBatchTask>(std::initializer_list<std::shared_ptr<MMPEngine::Core::BaseTask>>
+		{
+			updateCameraTask,
+			renderJobExecutionTask
+		});
+
 
 	}
 
@@ -186,10 +192,7 @@ namespace Sample::Boxes
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportDependentData->screenStartFrameTask);
-			stream->Schedule(_viewportDependentData->updateCameraTask);
-			stream->Schedule(_viewportDependentData->renderJobExecutionTask);
-			stream->Schedule(_viewportDependentData->screenPresentTask);
+			stream->Schedule(_viewportDependentData->screenFrameTask);
 		}
 	}
 }
