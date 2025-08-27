@@ -1,10 +1,10 @@
-#include <Boxes/App.hpp>
+#include <Primitives/App.hpp>
 #include <Frontend/Shader.hpp>
 #include <Core/Material.hpp>
 #include <Frontend/Geometry.hpp>
 #include <Core/Node.hpp>
 
-namespace Sample::Boxes
+namespace Sample::Primitives
 {
 	App::App(const std::shared_ptr<MMPEngine::Feature::BaseLogger>& logger) : UserApp(logger)
 	{
@@ -19,7 +19,7 @@ namespace Sample::Boxes
 		const auto globalContext = GetContext();
 		const auto stream = GetDefaultStream();
 
-		_viewportIndependentData->shaderPack = std::make_shared<MMPEngine::Frontend::ShaderPack>(globalContext, std::filesystem::path("Boxes.json"));
+		_viewportIndependentData->shaderPack = std::make_shared<MMPEngine::Frontend::ShaderPack>(globalContext, std::filesystem::path("Primitives.json"));
 
 		const auto vs = _viewportIndependentData->shaderPack->Unpack("VertexTest");
 		const auto ps = _viewportIndependentData->shaderPack->Unpack("PixelTest");
@@ -31,23 +31,40 @@ namespace Sample::Boxes
 		_viewportIndependentData->materialData = std::make_tuple(matSettings, vs, ps);
 
 		auto boxProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Box>();
-		_viewportIndependentData->mesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
+		auto quadProto = MMPEngine::Frontend::Geometry::Generate<MMPEngine::Frontend::Geometry::PrimitiveType::Quad>();
 
-		const auto meshRendererNode = std::make_shared<MMPEngine::Core::Node>();
+		const auto boxMesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(boxProto));
+		const auto quadMesh = std::make_shared<MMPEngine::Frontend::Mesh>(globalContext, std::move(quadProto));
 
-		meshRendererNode->localTransform.position.x += 2.5f;
-		meshRendererNode->localTransform.position.y += 1.5f;
-		meshRendererNode->localTransform.position.z += 1.0f;
+		const auto boxMeshRendererNode = std::make_shared<MMPEngine::Core::Node>();
+		const auto quadMeshRendererNode = std::make_shared<MMPEngine::Core::Node>();
 
-		_viewportIndependentData->meshRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
+		boxMeshRendererNode->localTransform.position.x += 2.5f;
+		boxMeshRendererNode->localTransform.position.y += 1.5f;
+		boxMeshRendererNode->localTransform.position.z += 1.0f;
+
+		const auto boxRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
 			globalContext, 
 			MMPEngine::Core::Mesh::Renderer::Settings {
 				{true},
 				{1}
 			}, 
-			_viewportIndependentData->mesh, 
-			meshRendererNode
+			boxMesh, 
+			boxMeshRendererNode
 		);
+
+		const auto quadRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
+			globalContext,
+			MMPEngine::Core::Mesh::Renderer::Settings{
+				{true},
+				{1}
+			},
+			quadMesh,
+			quadMeshRendererNode
+		);
+
+		_viewportIndependentData->meshRenderers.push_back(boxRenderer);
+		_viewportIndependentData->meshRenderers.push_back(quadRenderer);
 
 		_viewportIndependentData->cameraNode = std::make_shared<MMPEngine::Core::Node>();
 		_viewportIndependentData->cameraNode->localTransform.position = { 0.0f, 0.0f, -5.0f };
@@ -66,13 +83,23 @@ namespace Sample::Boxes
 			stream->Schedule(vs->CreateInitializationTask());
 			stream->Schedule(ps->CreateInitializationTask());
 
-			stream->Schedule(_viewportIndependentData->mesh->CreateInitializationTask());
-			stream->Schedule(_viewportIndependentData->meshRenderer->CreateInitializationTask());
+			for (const auto& mr : _viewportIndependentData->meshRenderers)
+			{
+				stream->Schedule(mr->GetMesh()->CreateInitializationTask());
+			}
+
+			for (const auto& mr : _viewportIndependentData->meshRenderers)
+			{
+				stream->Schedule(mr->CreateInitializationTask());
+			}
 		}
 
 		{
 			const auto executor = stream->CreateExecutor();
-			stream->Schedule(_viewportIndependentData->meshRenderer->CreateTaskToUpdateAndWriteUniformData());
+			for (const auto& mr : _viewportIndependentData->meshRenderers)
+			{
+				stream->Schedule(mr->CreateTaskToUpdateAndWriteUniformData());
+			}
 		}
 	}
 
@@ -119,7 +146,11 @@ namespace Sample::Boxes
 			stream->Schedule(_viewportDependentData->camera->CreateInitializationTask());
 		}
 
-		auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
+		auto drawItems = std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item> {};
+
+		for (const auto& mr : _viewportIndependentData->meshRenderers)
+		{
+			auto materialParams = MMPEngine::Core::BaseMaterial::Parameters{
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
@@ -132,31 +163,29 @@ namespace Sample::Boxes
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 				"mesh_data",
 					"object",
-						_viewportIndependentData->meshRenderer->GetUniformDataEntity(),
+						mr->GetUniformDataEntity(),
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
 					}
 				}
 			}
-		};
+			};
 
-		const auto material = std::make_shared<MMPEngine::Core::MeshMaterial>(
-			std::get<0>(_viewportIndependentData->materialData),
-			std::move(materialParams),
-			std::get<1>(_viewportIndependentData->materialData),
-			std::get<2>(_viewportIndependentData->materialData)
-		);
+			const auto material = std::make_shared<MMPEngine::Core::MeshMaterial>(
+				std::get<0>(_viewportIndependentData->materialData),
+				std::move(materialParams),
+				std::get<1>(_viewportIndependentData->materialData),
+				std::get<2>(_viewportIndependentData->materialData)
+			);
+
+			drawItems.push_back(MMPEngine::Core::Camera::DrawCallsJob::Item{mr, material});
+		}
 
 
 		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
 			globalContext,
 			_viewportDependentData->camera,
-			std::vector<MMPEngine::Core::Camera::DrawCallsJob::Item>{
-				MMPEngine::Core::Camera::DrawCallsJob::Item{
-					_viewportIndependentData->meshRenderer,
-					material
-				}
-			}
+			std::move(drawItems)
 		);
 
 		{

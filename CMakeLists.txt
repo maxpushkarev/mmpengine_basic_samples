@@ -161,6 +161,6 @@ function(addSample appName)
 endfunction()
 
 addSample("Empty")
-addSample("Boxes")
+addSample("Primitives")
 addSample("Buffers")
 addSample("Compute")

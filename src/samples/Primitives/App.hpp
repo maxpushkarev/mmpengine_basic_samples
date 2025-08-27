@@ -9,7 +9,7 @@
 #include <Frontend/DrawCall.hpp>
 #include <Frontend/Shader.hpp>
 
-namespace Sample::Boxes
+namespace Sample::Primitives
 {
 	class App : public MMPEngine::Feature::UserApp
 	{
@@ -30,8 +30,7 @@ namespace Sample::Boxes
 				std::shared_ptr<MMPEngine::Core::Shader>,
 				std::shared_ptr<MMPEngine::Core::Shader>
 			> materialData;
-			std::shared_ptr<MMPEngine::Core::Mesh> mesh;
-			std::shared_ptr<MMPEngine::Core::Mesh::Renderer> meshRenderer;
+			std::vector<std::shared_ptr<MMPEngine::Core::Mesh::Renderer>> meshRenderers;
 			std::shared_ptr<MMPEngine::Core::Node> cameraNode;
 			std::unique_ptr<MMPEngine::Feature::Movement::Controller> cameraMovement;
 		};
