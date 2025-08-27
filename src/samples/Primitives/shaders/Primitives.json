@@ -34,7 +34,7 @@
     },
     "Metal": {
       "lib": {
-        "path": "./Boxes.metallib",
+        "path": "./Primitives.metallib",
         "shaders": [
             {
               "id": "VertexTest",
