@@ -56,7 +56,12 @@ namespace Sample::Primitives
 		const auto quadRenderer = std::make_shared<MMPEngine::Frontend::Mesh::Renderer>(
 			globalContext,
 			MMPEngine::Core::Mesh::Renderer::Settings{
-				{true},
+				{
+					true,
+					std::vector<MMPEngine::Core::GeometryPrototype::VertexAttribute> {
+						{MMPEngine::Core::VertexBufferPrototype::Semantics::Position, 0 }
+					}
+				},
 				{1}
 			},
 			quadMesh,
