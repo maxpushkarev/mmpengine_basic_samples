@@ -1,5 +1,5 @@
-#ifndef BOXES_TEST_SHADER
-#define BOXES_TEST_SHADER 1
+#ifndef PRIMITIVES_TEST_SHADER
+#define PRIMITIVES_TEST_SHADER 1
 #include "../../../libs/mmpengine/src/Frontend/Shader.h"
 
 #if MMPENGINE_HLSL

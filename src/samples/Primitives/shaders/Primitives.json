@@ -2,18 +2,18 @@
   "shaderPack": {
     "Dx12": {
 		"byteCodeFiles": [
-			{
-				"id" : "VertexTest",
-				"type" : "Vertex",
-				"entryPoint" : "main",
-				"path": "Vertex_Test.cso"
-			},
-			{
-				"id" : "PixelTest",
-				"type" : "Pixel",
-				"entryPoint" : "main",
-				"path": "Pixel_Test.cso"
-			}
+      {
+        "id": "VertexTest",
+        "type": "Vertex",
+        "entryPoint": "EntryPoint",
+        "path": "Vertex_Test.cso"
+      },
+      {
+        "id": "PixelTest",
+        "type": "Pixel",
+        "entryPoint": "EntryPoint",
+        "path": "Pixel_Test.cso"
+      }
 		]
     },
     "Vulkan": {

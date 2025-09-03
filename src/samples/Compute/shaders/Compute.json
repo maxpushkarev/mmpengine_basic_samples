@@ -5,19 +5,19 @@
         {
           "id": "FilterNegative",
           "type": "Compute",
-          "entryPoint": "main",
+          "entryPoint": "EntryPoint",
           "path": "Compute_Filter_Negative.cso"
         },
         {
           "id": "FilterPositive",
           "type": "Compute",
-          "entryPoint": "main",
+          "entryPoint": "EntryPoint",
           "path": "Compute_Filter_Positive.cso"
         },
         {
           "id": "SetValue",
           "type": "Compute",
-          "entryPoint": "main",
+          "entryPoint": "EntryPoint",
           "path": "Compute_SetValue.cso"
         }
       ]
