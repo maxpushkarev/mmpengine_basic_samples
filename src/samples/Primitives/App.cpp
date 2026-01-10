@@ -159,7 +159,6 @@ namespace Sample::Primitives
 			std::vector {
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 					"camera_data",
-						"scene",
 						_viewportDependentData->camera->GetUniformDataEntity(),
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
@@ -167,7 +166,6 @@ namespace Sample::Primitives
 				},
 				MMPEngine::Core::BaseMaterial::Parameters::Entry {
 				"mesh_data",
-					"object",
 						mr->GetUniformDataEntity(),
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer {
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
