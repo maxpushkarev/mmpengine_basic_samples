@@ -1,6 +1,6 @@
 #include <Primitives/App.hpp>
 #include <Frontend/Shader.hpp>
-#include <Core/Material.hpp>
+#include <Frontend/Material.hpp>
 #include <Frontend/Geometry.hpp>
 #include <Core/Node.hpp>
 
@@ -174,17 +174,22 @@ namespace Sample::Primitives
 			}
 			};
 
-			const auto material = std::make_shared<MMPEngine::Core::MeshMaterial>(
+			const auto material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
+                globalContext,
 				std::get<0>(_viewportIndependentData->materialData),
 				std::move(materialParams),
 				std::get<1>(_viewportIndependentData->materialData),
 				std::get<2>(_viewportIndependentData->materialData)
 			);
 
+            {
+                const auto executor = stream->CreateExecutor();
+                stream->Schedule(material->CreateInitializationTask());
+            }
+            
 			drawItems.push_back(MMPEngine::Core::Camera::DrawCallsJob::Item{mr, material});
 		}
-
-
+        
 		_viewportDependentData->renderJob = std::make_shared<MMPEngine::Frontend::Camera::DrawCallsJob>(
 			globalContext,
 			_viewportDependentData->camera,
