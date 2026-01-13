@@ -171,7 +171,10 @@ namespace Sample::Primitives
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
 					}
 				}
-			}
+			},
+            MMPEngine::Core::BaseMaterial::Parameters::Bindings {
+                std::filesystem::path("PrimitivesBindings.json")
+            }
 			};
 
 			const auto material = std::make_shared<MMPEngine::Frontend::MeshMaterial>(
