@@ -1,0 +1,18 @@
+{
+  "bindings": {
+    "Dx12": {
+    },
+    "Vulkan": {
+    },
+    "Metal": {
+        "camera_data" : {
+            "vs" : 1,
+            "ps" : 0
+        },
+        "mesh_data" : {
+            "vs" : 2,
+            "ps" : 1
+        }
+    }
+  }
+}
