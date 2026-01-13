@@ -85,8 +85,7 @@ namespace Sample::Compute
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::Uniform
 					}
 				}
-			},
-            std::filesystem::path("SetValueBindings.json")
+			}
 		};
 		const auto material = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(GetContext(), std::move(params), computeShader);
 		const auto computeJob = std::make_shared<MMPEngine::Frontend::DirectComputeJob>(GetContext(), material);
@@ -238,8 +237,7 @@ namespace Sample::Compute
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
 					}
 				}
-			},
-            std::filesystem::path("PositiveBindings.json")
+			}
 		};
 
 
@@ -259,8 +257,7 @@ namespace Sample::Compute
 						MMPEngine::Core::BaseMaterial::Parameters::Buffer::Type::UnorderedAccess
 					}
 				}
-			},
-            std::filesystem::path("NegativeBindings.json")
+			}
 		};
 
 		const auto materialPositive = std::make_shared<MMPEngine::Frontend::ComputeMaterial>(globalContext, std::move(paramsPositive), computeShaderPositive);
